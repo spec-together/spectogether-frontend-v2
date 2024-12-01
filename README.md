@@ -1,14 +1,13 @@
-# Meet WebApp
+# spectogether frontend (web) v2
 
-This project is from [About Meet Project](https://github.com/SeSAC-Project-Meet/about-this-project)
+This project is from [spectogether](https://github.com/spec-together)
 
 ### 🚀 How to Use
 
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/SeSAC-Project-Meet/meet-webapp-front.git
-   cd meet-webapp-front
+   git clone https://github.com/spec-together/spectogether-frontend-v2.git
    ```
 
 2. Set environment variables in `/src/api/config.js`  
