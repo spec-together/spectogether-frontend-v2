@@ -8,77 +8,104 @@ const StudyroomVideocallPage = () => {
   const [cameras, setCameras] = useState([]);
   const [roomName, setRoomName] = useState("");
   const [inCall, setInCall] = useState(false);
+  const [users, setUsers] = useState([]);
 
   const myFaceRef = useRef();
-  const peerFaceRef = useRef();
   const socketRef = useRef();
-  const myPeerConnectionRef = useRef();
-  const myDataChannelRef = useRef();
-
+  const myPeerConnections = useRef({});
   const myStream = useRef();
+  const camerasSelectRef = useRef();
 
   useEffect(() => {
     socketRef.current = io(VIDEO_SOCKET_URL);
 
-    socketRef.current.on("welcome", async () => {
-      // 필요없는 부분, datachannel
-      myDataChannelRef.current =
-        myPeerConnectionRef.current.createDataChannel("chat");
-      myDataChannelRef.current.addEventListener("message", (event) =>
-        console.log(event.data)
-      );
-      console.log("made data channel");
-
-      const offer = await myPeerConnectionRef.current.createOffer();
-      myPeerConnectionRef.current.setLocalDescription(offer);
-      console.log("sent the offer");
-      socketRef.current.emit("offer", offer, roomName);
-    });
-
-    socketRef.current.on("offer", async (offer) => {
-      myPeerConnectionRef.current.addEventListener("datachannel", (event) => {
-        myDataChannelRef.current = event.channel;
-
-        myDataChannelRef.current.addEventListener("message", (event) =>
-          console.log(event.data)
-        );
+    socketRef.current.on("all-users", (users) => {
+      users.forEach((userId) => {
+        createPeerConnection(userId, true);
       });
-
-      console.log("received the offer");
-      myPeerConnectionRef.current.setRemoteDescription(offer);
-      const answer = await myPeerConnectionRef.current.createAnswer();
-      myPeerConnectionRef.current.setLocalDescription(answer);
-      socketRef.current.emit("answer", answer, roomName);
-      console.log("sent the answer");
     });
 
-    socketRef.current.on("answer", (answer) => {
-      console.log("received the answer");
-      myPeerConnectionRef.current.setRemoteDescription(answer);
+    socketRef.current.on("user-joined", (userId) => {
+      createPeerConnection(userId, false);
     });
 
-    socketRef.current.on("ice", (ice) => {
-      console.log("received candidate");
-      myPeerConnectionRef.current.addIceCandidate(ice);
+    socketRef.current.on("offer", async (userId, offer) => {
+      const pc = await createPeerConnection(userId, false);
+      await pc.setRemoteDescription(new RTCSessionDescription(offer));
+      const answer = await pc.createAnswer();
+      await pc.setLocalDescription(answer);
+      socketRef.current.emit("answer", userId, answer);
     });
-  }, [roomName]);
 
-  // 1번째로 실행, 카메라 정보 가져오기
-  const getCameras = async () => {
-    try {
-      const devices = await navigator.mediaDevices.enumerateDevices();
-      const videoCameras = devices.filter(
-        (device) => device.kind === "videoinput"
-      );
-      setCameras(videoCameras);
-    } catch (e) {
-      console.log(e);
+    socketRef.current.on("answer", async (userId, answer) => {
+      const pc = myPeerConnections.current[userId];
+      await pc.setRemoteDescription(new RTCSessionDescription(answer));
+    });
+
+    socketRef.current.on("ice-candidate", (userId, candidate) => {
+      const pc = myPeerConnections.current[userId];
+      if (pc) {
+        pc.addIceCandidate(new RTCIceCandidate(candidate));
+      }
+    });
+
+    socketRef.current.on("user-left", (userId) => {
+      if (myPeerConnections.current[userId]) {
+        myPeerConnections.current[userId].close();
+        delete myPeerConnections.current[userId];
+        setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+      }
+    });
+
+    return () => {
+      socketRef.current.disconnect();
+    };
+  }, []);
+
+  const createPeerConnection = async (userId, isInitiator) => {
+    const pc = new RTCPeerConnection({
+      iceServers: [
+        {
+          urls: [
+            "stun:stun.l.google.com:19302",
+            // 필요한 경우 다른 STUN/TURN 서버 추가
+          ],
+        },
+      ],
+    });
+
+    myPeerConnections.current[userId] = pc;
+
+    pc.onicecandidate = (event) => {
+      if (event.candidate) {
+        socketRef.current.emit("ice-candidate", userId, event.candidate);
+      }
+    };
+
+    pc.ontrack = (event) => {
+      setUsers((prevUsers) => {
+        if (!prevUsers.some((user) => user.id === userId)) {
+          return [...prevUsers, { id: userId, stream: event.streams[0] }];
+        }
+        return prevUsers;
+      });
+    };
+
+    myStream.current.getTracks().forEach((track) => {
+      pc.addTrack(track, myStream.current);
+    });
+
+    if (isInitiator) {
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+      socketRef.current.emit("offer", userId, offer);
     }
+
+    return pc;
   };
 
-  // 2번째로 실행,
   const getMedia = async (deviceId) => {
-    const initialConstrains = {
+    const initialConstraints = {
       audio: true,
       video: { facingMode: "user" },
     };
@@ -87,148 +114,155 @@ const StudyroomVideocallPage = () => {
       video: { deviceId: { exact: deviceId } },
     };
     try {
-      // deviceId가 있으면 그 deviceId에 해당하는 기기를, 아니면 default로 가져옴
       const stream = await navigator.mediaDevices.getUserMedia(
-        deviceId ? cameraConstraints : initialConstrains
+        deviceId ? cameraConstraints : initialConstraints
       );
-      // 내가 볼 때 여기가 문제긴 함 비동기라
-      // setMyStream.current(stream);
       myStream.current = stream;
       myFaceRef.current.srcObject = stream;
       if (!deviceId) {
         await getCameras();
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
+    }
+  };
+
+  const getCameras = async () => {
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const videoCameras = devices.filter(
+        (device) => device.kind === "videoinput"
+      );
+      setCameras(videoCameras);
+    } catch (e) {
+      console.error(e);
     }
   };
 
   const handleMuteClick = () => {
-    myStream.current
-      .getAudioTracks()
-      .forEach((track) => (track.enabled = !track.enabled));
+    myStream.current.getAudioTracks().forEach((track) => {
+      track.enabled = !track.enabled;
+    });
     setMuted((prev) => !prev);
   };
 
   const handleCameraClick = () => {
-    myStream.current
-      .getVideoTracks()
-      .forEach((track) => (track.enabled = !track.enabled));
+    myStream.current.getVideoTracks().forEach((track) => {
+      track.enabled = !track.enabled;
+    });
     setCameraOff((prev) => !prev);
   };
 
   const handleCameraChange = async () => {
     await getMedia(camerasSelectRef.current.value);
-    if (myPeerConnectionRef.current) {
+    Object.values(myPeerConnections.current).forEach((pc) => {
       const videoTrack = myStream.current.getVideoTracks()[0];
-      const videoSender = myPeerConnectionRef.current
-        .getSenders()
-        .find((sender) => sender.track.kind === "video");
-      videoSender.replaceTrack(videoTrack);
-    }
-  };
-
-  const handleWelcomeSubmit = async (event) => {
-    event.preventDefault();
-    await initCall();
-    socketRef.current.emit("join_room", roomName);
+      const sender = pc.getSenders().find((s) => s.track.kind === "video");
+      if (sender) {
+        sender.replaceTrack(videoTrack);
+      }
+    });
   };
 
   const initCall = async () => {
     setInCall(true);
     await getMedia();
-    makeConnection();
+    socketRef.current.emit("join-room", roomName);
   };
 
-  const makeConnection = () => {
-    myPeerConnectionRef.current = new RTCPeerConnection({
-      iceServers: [
-        {
-          urls: [
-            "stun:stun.l.google.com:19302",
-            "stun:stun1.l.google.com:19302",
-            "stun:stun2.l.google.com:19302",
-            "stun:stun3.l.google.com:19302",
-            "stun:stun4.l.google.com:19302",
-          ],
-        },
-      ],
-    });
-    myPeerConnectionRef.current.addEventListener("icecandidate", handleIce);
-    myPeerConnectionRef.current.addEventListener("addstream", handleAddStream);
-    myStream.current
-      .getTracks()
-      .forEach((track) =>
-        myPeerConnectionRef.current.addTrack(track, myStream.current)
-      );
+  const handleWelcomeSubmit = async (event) => {
+    event.preventDefault();
+    await initCall();
   };
-
-  const handleIce = (data) => {
-    console.log("sent candidate");
-    socketRef.current.emit("ice", data.candidate, roomName);
-  };
-
-  const handleAddStream = (data) => {
-    peerFaceRef.current.srcObject = data.stream;
-  };
-
-  const camerasSelectRef = useRef();
 
   return (
-    <div>
+    <div className="min-h-screen p-4 bg-gray-100">
       {!inCall ? (
-        <div id="welcome">
-          <form onSubmit={handleWelcomeSubmit}>
+        <div className="max-w-md p-6 mx-auto mt-10 bg-white rounded-lg shadow-lg">
+          <form onSubmit={handleWelcomeSubmit} className="space-y-4">
             <input
-              placeholder="room name"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter room name"
               required
               type="text"
               value={roomName}
               onChange={(e) => setRoomName(e.target.value)}
             />
-            <button type="submit">Enter room</button>
+            <button
+              type="submit"
+              className="w-full px-4 py-2 text-white transition-colors bg-blue-500 rounded-lg hover:bg-blue-600"
+            >
+              Enter Room
+            </button>
           </form>
         </div>
       ) : (
-        <div id="call">
-          <div id="myStream.current">
-            <video
-              id="myFace"
-              ref={myFaceRef}
-              autoPlay
-              playsInline
-              width="400"
-              height="400"
-            ></video>
-            <button id="mute" onClick={handleMuteClick}>
-              {muted ? "Unmute" : "Mute"}
-            </button>
-            <button id="camera" onClick={handleCameraClick}>
-              {cameraOff ? "Turn Camera On" : "Turn Camera Off"}
-            </button>
-            <select
-              id="cameras"
-              ref={camerasSelectRef}
-              onChange={handleCameraChange}
-            >
-              {cameras.map((camera) => (
-                <option key={camera.deviceId} value={camera.deviceId}>
-                  {camera.label}
-                </option>
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="p-4 bg-white rounded-lg shadow-lg">
+              <video
+                id="myFace"
+                ref={myFaceRef}
+                autoPlay
+                playsInline
+                className="w-full mb-4 rounded-lg"
+              ></video>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={handleMuteClick}
+                  className={`px-4 py-2 rounded-lg ${
+                    muted ? "bg-red-500" : "bg-green-500"
+                  } text-white hover:opacity-90`}
+                >
+                  {muted ? "Unmute" : "Mute"}
+                </button>
+                <button
+                  onClick={handleCameraClick}
+                  className={`px-4 py-2 rounded-lg ${
+                    cameraOff ? "bg-red-500" : "bg-green-500"
+                  } text-white hover:opacity-90`}
+                >
+                  {cameraOff ? "Turn Camera On" : "Turn Camera Off"}
+                </button>
+                <select
+                  ref={camerasSelectRef}
+                  onChange={handleCameraChange}
+                  className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {cameras.map((camera) => (
+                    <option key={camera.deviceId} value={camera.deviceId}>
+                      {camera.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {users.map((user) => (
+                <div
+                  key={user.id}
+                  className="p-4 bg-white rounded-lg shadow-lg"
+                >
+                  <Video stream={user.stream} />
+                </div>
               ))}
-            </select>
-            <video
-              id="peerFace"
-              ref={peerFaceRef}
-              autoPlay
-              playsInline
-              width="400"
-              height="400"
-            ></video>
+            </div>
           </div>
         </div>
       )}
     </div>
+  );
+};
+
+const Video = ({ stream }) => {
+  const ref = useRef();
+
+  useEffect(() => {
+    ref.current.srcObject = stream;
+  }, [stream]);
+
+  return (
+    <video ref={ref} autoPlay playsInline width="400" height="300"></video>
   );
 };
 
