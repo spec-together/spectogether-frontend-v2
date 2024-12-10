@@ -26,6 +26,7 @@ import { StudyroomPage } from "./pages/StudyroomPage.jsx";
 import { NewLoginPage } from "./pages/NewLoginPage.jsx";
 import { NewRegisterPage } from "./pages/NewRegisterPage.jsx";
 import { NewTermsAgreePage } from "./pages/NewTermsAgreePage.jsx";
+import StudyroomVideocallPage from "./pages/StudyroomVideocallPage.jsx";
 
 function App() {
   return (
@@ -89,6 +90,7 @@ function App() {
               </PageHeaderLayoutPage>
             }
           />
+          <Route path="/test-videocall" element={<StudyroomVideocallPage />} />
 
           <Route path="/test" element={<FeatureTestPage />} />
           <Route path="/email-check" element={<EmailCheckNonUser />} />
