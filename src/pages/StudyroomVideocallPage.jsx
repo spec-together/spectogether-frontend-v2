@@ -1,12 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
 import io from "socket.io-client";
-import { VIDEO_SOCKET_URL } from "../api/config";
+import { SOCKET_URL_VIDEO } from "../api/config";
+import { Loading } from "./Loading";
+import { useParams } from "react-router-dom";
 
 const StudyroomVideocallPage = () => {
   const [muted, setMuted] = useState(false);
   const [cameraOff, setCameraOff] = useState(false);
   const [cameras, setCameras] = useState([]);
-  const [roomName, setRoomName] = useState("");
+  // const [roomName, setRoomName] = useState("");
   const [inCall, setInCall] = useState(false);
   const [users, setUsers] = useState([]);
 
@@ -16,8 +18,10 @@ const StudyroomVideocallPage = () => {
   const myStream = useRef();
   const camerasSelectRef = useRef();
 
+  const { studyroomId } = useParams();
+
   useEffect(() => {
-    socketRef.current = io(VIDEO_SOCKET_URL);
+    socketRef.current = io(SOCKET_URL_VIDEO);
 
     socketRef.current.on("all-users", (users) => {
       users.forEach((userId) => {
@@ -166,36 +170,42 @@ const StudyroomVideocallPage = () => {
 
   const initCall = async () => {
     setInCall(true);
+    console.log(`[initCall] studyroomId: ${studyroomId}`);
     await getMedia();
-    socketRef.current.emit("join-room", roomName);
+    socketRef.current.emit("join-room", studyroomId);
   };
 
   const handleWelcomeSubmit = async (event) => {
-    event.preventDefault();
+    // event.preventDefault();
     await initCall();
   };
+
+  useEffect(() => {
+    handleWelcomeSubmit();
+  }, []);
 
   return (
     <div className="min-h-screen p-4 bg-gray-100">
       {!inCall ? (
-        <div className="max-w-md p-6 mx-auto mt-10 bg-white rounded-lg shadow-lg">
-          <form onSubmit={handleWelcomeSubmit} className="space-y-4">
-            <input
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter room name"
-              required
-              type="text"
-              value={roomName}
-              onChange={(e) => setRoomName(e.target.value)}
-            />
-            <button
-              type="submit"
-              className="w-full px-4 py-2 text-white transition-colors bg-blue-500 rounded-lg hover:bg-blue-600"
-            >
-              Enter Room
-            </button>
-          </form>
-        </div>
+        // <div className="max-w-md p-6 mx-auto mt-10 bg-white rounded-lg shadow-lg">
+        //   <form onSubmit={handleWelcomeSubmit} className="space-y-4">
+        //     <input
+        //       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        //       placeholder="Enter room name"
+        //       required
+        //       type="text"
+        //       value={roomName}
+        //       onChange={(e) => setRoomName(e.target.value)}
+        //     />
+        //     <button
+        //       type="submit"
+        //       className="w-full px-4 py-2 text-white transition-colors bg-blue-500 rounded-lg hover:bg-blue-600"
+        //     >
+        //       Enter Room
+        //     </button>
+        //   </form>
+        // </div>
+        <Loading />
       ) : (
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">

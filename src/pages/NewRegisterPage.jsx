@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useFormattedPhoneNumber from "../hooks/useFormattedPhoneNumber";
 import { ShowAndHideIcon } from "../components/icons/ShowAndHideIcon";
 import { VerifyTrueFalseIcon } from "../components/icons/VerifyTrueFalseicon";
@@ -12,13 +12,22 @@ import {
 } from "../api/auth/register/validations";
 import { userRegister } from "../api/auth/register/userRegister";
 
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 export const NewRegisterPage = () => {
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [birthdate, setBirthdate] = useState(new Date("1990-01-01"));
+
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const [presetEnabled, setPresetEnabled] = useState(false);
 
   const [nameError, setNameError] = useState("");
   const [phoneNumberError, setPhoneNumberError] = useState("");
@@ -33,12 +42,17 @@ export const NewRegisterPage = () => {
   const [triedUniqueEmail, setTriedUniqueEmail] = useState(false);
   const [triedUniquePhoneNumber, setTriedUniquePhoneNumber] = useState(false);
 
+  const [profileImage, setProfileImage] = useState("");
+  const [fileName, setFileName] = useState("");
+
+  // 비밀번호에 공백, 한글이 포함되어 있을 경우 제거
   useEffect(() => {
     if (password.includes(" ") || /[ㄱ-ㅎㅏ-ㅣ가-힣]/.test(password)) {
       setPassword(password.replace(/[\sㄱ-ㅎㅏ-ㅣ가-힣]/g, ""));
     }
   }, [password]);
 
+  // 이메일, 전화번호 유효성 검사
   useEffect(() => {
     if (validateEmailFormat(email)) {
       setIsValidEmail(true);
@@ -57,7 +71,19 @@ export const NewRegisterPage = () => {
     }
   }, [phoneNumber]);
 
+  // 전화번호 입력 시 '-' 자동 입력
   useFormattedPhoneNumber(phoneNumber, setPhoneNumber);
+
+  // 카카오톡으로 회원가입 시 email은 고정하도록 하는 부분
+  useEffect(() => {
+    console.log("[회원가입 : 메인] state로 넘어온 약관 : ", location.state);
+    // TODO : type에 따른 구별 처리 및 정보를 자동으로 채웠을 떄에는 disabled 처리
+    if (location.state?.email) {
+      setEmail(location.state?.email || "");
+      setPresetEnabled(true);
+      setIsUniqueEmail(true);
+    }
+  }, [location]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -65,8 +91,8 @@ export const NewRegisterPage = () => {
     const errors = {
       name: validateName(name),
       password: validatePassword(password),
-      phoneNumber: validatePhoneNumberFormat(phoneNumber),
-      email: validateEmailFormat(email),
+      phoneNumber: !validatePhoneNumberFormat(phoneNumber),
+      email: !validateEmailFormat(email),
     };
 
     if (Object.values(errors).some((error) => error)) {
@@ -81,12 +107,29 @@ export const NewRegisterPage = () => {
     setPasswordError("");
     setPhoneNumberError("");
     setEmailError("");
+
+    const userAgreedTerms = Object.entries(location.state.agreeTerms).map(
+      ([key, value]) => ({
+        term_id: Number(key),
+        agreed: value,
+      })
+    );
+    const userRegisterType = presetEnabled ? "kakao" : "local";
+
     try {
+      // TODO : date 한국시간 기준으로 변경해야하나?
       const registerResult = await userRegister({
+        user_register_type: userRegisterType,
         name,
+        nickname,
+        birthdate: birthdate.toISOString().split("T")[0],
         email,
+        email_verification_id: "1",
         phone_number: phoneNumber,
+        phone_number_verification_id: "1",
         password,
+        terms: userAgreedTerms,
+        profile_image: "123", // TODO : 이미지 S3에 업로드 후 URL 반환하는 것으로 수정
       });
       if (!registerResult.status) {
         alert("회원가입에 실패했습니다.\n" + registerResult.message);
@@ -127,6 +170,31 @@ export const NewRegisterPage = () => {
             onChange={(e) => setName(e.target.value)}
           />
           <span className="mt-1 -mb-2 text-xs text-red-500">{nameError}</span>
+
+          <input
+            type="text"
+            placeholder="닉네임을 입력하세요"
+            className="p-1 mt-10 border-b border-black focus:outline-none"
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+          />
+
+          {/* 생년월일 입력 */}
+          <div className="flex flex-row mt-10 border-b border-black">
+            <span className="p-1">생년월일</span>
+            <div className="flex-grow"></div>
+            <DatePicker
+              selected={birthdate}
+              onChange={(date) => setBirthdate(date)}
+              dateFormat="yyyy-MM-dd"
+              className="p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholderText="생년월일을 입력하세요"
+              shouldCloseOnSelect
+              showYearDropdown
+              scrollableYearDropdown
+              yearDropdownItemNumber={100}
+            />
+          </div>
 
           <div className="relative mt-10 border-b border-black ">
             <input
@@ -197,6 +265,43 @@ export const NewRegisterPage = () => {
                   ? "이미 가입된 이메일 입니다."
                   : "")}
           </span>
+
+          {/* 스터디룸 프로필 이미지 */}
+          <div className="relative flex items-center mt-10 border-b border-black">
+            <label className="text-gray-700">스터디룸 프로필</label>
+            <div className="relative">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    setFileName(file.name); // 파일명 저장
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                      setProfileImage(reader.result);
+                    };
+                    reader.readAsDataURL(file);
+                  }
+                }}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+              <span className="text-gray-500">
+                {fileName || "이미지 파일 선택"}
+              </span>
+              <button
+                type="button"
+                className="px-4 py-1 text-sm text-blue-600 bg-white rounded-md shadow-sm hover:bg-blue-100"
+              >
+                파일 선택
+              </button>
+            </div>
+            {fileName && (
+              <div className="mt-2 text-sm text-blue-600">
+                선택된 파일: {fileName}
+              </div>
+            )}
+          </div>
 
           <button
             onClick={handleSubmit}

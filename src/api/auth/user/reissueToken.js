@@ -7,13 +7,10 @@ export const reissueToken = async () => {
     console.log("[reissueToken] 토큰 재발급 요청 중...");
     const response = await meetApi.get(REISSUE_TOKEN);
 
-    const { token, user } = response.data;
-    const { user_id, username } = user;
-    setAccessTokenToLocalStorage(token);
+    const { access_token } = response.data;
+    setAccessTokenToLocalStorage(access_token);
     console.log(`
-      [reissueToken] Token Reissued, 사용자 정보:\n
-      user_id: ${user_id}\n
-      username: ${username}
+      [reissueToken] Token Reissued
     `);
 
     return true;

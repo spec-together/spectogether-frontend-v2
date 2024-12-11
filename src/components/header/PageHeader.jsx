@@ -42,11 +42,7 @@ export const PageHeader = () => {
       {/* 빈공간 채워주기 */}
       <div className="flex-grow"></div>
       {/* 회원정보 */}
-      {user?.user_id ? (
-        <LoggedInUserAndIcons user={user} />
-      ) : (
-        <LoginAndRegister />
-      )}
+      {user?.name ? <LoggedInUserAndIcons user={user} /> : <LoginAndRegister />}
     </div>
   );
 };

@@ -30,7 +30,7 @@ export const NewLoginPage = () => {
     if (checked_user) {
       setUser(checked_user);
       console.log("[LocalLoginPage] user : ", user, checked_user);
-      alert(`환영합니다, ${checked_user.username} 님!`);
+      alert(`환영합니다, ${checked_user.name} 님!`);
       navigate("/");
     } else {
       setLoginId("");

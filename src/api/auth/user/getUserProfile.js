@@ -10,9 +10,36 @@ export const getUserProfile = async () => {
       "[getUserProfile] 사용자 프로필을 가지고 옵니다:",
       response.data
     );
-    const { username, user_id } = response.data;
 
-    return { username, user_id }; // username을 반환
+    const {
+      user_id,
+      name,
+      nickname,
+      birthdate,
+      phone_number,
+      email,
+      profile_image,
+      spec_level,
+      manner_score,
+      created_at,
+      neighborhood,
+      specs,
+    } = response.data.success.user;
+
+    return {
+      user_id,
+      name,
+      nickname,
+      birthdate,
+      phone_number,
+      email,
+      profile_image,
+      spec_level,
+      manner_score,
+      created_at,
+      neighborhood,
+      specs,
+    }; // username을 반환
   } catch (error) {
     if (error.response && error.response.status === 401) {
       console.error("User not authenticated");

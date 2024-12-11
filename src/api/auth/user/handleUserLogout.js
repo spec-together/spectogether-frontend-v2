@@ -3,7 +3,7 @@ import { USER_LOGOUT } from "../../config";
 
 export const handleUserLogout = async () => {
   try {
-    const result = meetApi.get(USER_LOGOUT);
+    const result = await meetApi.get(USER_LOGOUT, { withCredentials: true });
     console.log(`[handleUserLogout] result : ${result}`);
     return result;
   } catch (error) {
