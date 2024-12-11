@@ -18,7 +18,7 @@ export const handleUserLogin = async (loginID, password) => {
 
     return { user_id, name, nickname };
   } catch (error) {
-    if (error.response.status === 401) {
+    if (error.response && error.response.status === 401) {
       console.error("잘못된 아이디 또는 비밀번호를 입력했습니다.");
       alert("잘못된 아이디 또는 비밀번호를 입력했습니다.");
       return null;

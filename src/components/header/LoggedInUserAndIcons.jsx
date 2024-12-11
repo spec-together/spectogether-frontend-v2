@@ -32,6 +32,7 @@ export const LoggedInUserAndIcons = ({ user }) => {
       if (result) {
         localStorage.removeItem("SPECTOGETHER_AT");
         setUser({});
+        alert("로그아웃 되었습니다.");
         navigate("/login");
       }
       setIsMessageBoxVisible(false);
