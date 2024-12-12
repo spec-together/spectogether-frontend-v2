@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { CloseModalButton } from "./CloseModalButton";
 import { handleCreateStudyroom } from "../../api/studyroom/handleCreateStudyroom";
 
-export const CreateStudyroomModal = ({ isOpen, onClose }) => {
+export const CreateStudyroomModal = ({ isOpen, onClose, autofill }) => {
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [areaId, setAreaId] = useState("");
@@ -11,8 +11,17 @@ export const CreateStudyroomModal = ({ isOpen, onClose }) => {
   const [targetId, setTargetId] = useState("");
   const [fileName, setFileName] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [autofillEnabled, setAutofillEnabled] = useState(false);
 
   const dropdownRef = useRef();
+
+  useEffect(() => {
+    if (autofill) {
+      setTargetType(autofill.targetType);
+      setTargetId(autofill.targetTitle);
+      setAutofillEnabled(true);
+    }
+  }, []);
 
   const handleCreateStudyroomButtonClick = async (e) => {
     e.preventDefault();
@@ -211,6 +220,7 @@ export const CreateStudyroomModal = ({ isOpen, onClose }) => {
               onChange={(e) => setTargetId(e.target.value)}
               className="w-2/3 px-4 py-2 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
+              disabled={autofillEnabled}
             />
           </div>
           {/* 액션 버튼 */}

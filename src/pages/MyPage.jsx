@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { MyPageEditUserInfo } from "../components/my-page/MyPageEditUserInfo";
+import { MyStudyroomListPage } from "./MyStudyroomListPage";
+import { MyTodoList } from "../components/my-page/MyTodoList";
 
 export const MyPage = () => {
   const [activeTab, setActiveTab] = useState("회원정보수정");
@@ -8,12 +10,12 @@ export const MyPage = () => {
     switch (activeTab) {
       case "회원정보수정":
         return <MyPageEditUserInfo />;
-      case "관심목록 수정":
-        return "관심목록 수정";
+      case "투두리스트 조회":
+        return <MyTodoList />;
       case "일정 관리":
         return "일정 관리";
       case "스터디 관리":
-        return "스터디 관리";
+        return <MyStudyroomListPage />;
       case "스펙 관리":
         return "스펙 관리";
       default:
@@ -23,7 +25,7 @@ export const MyPage = () => {
 
   const tabs = [
     "회원정보수정",
-    "관심목록 수정",
+    "투두리스트 조회",
     "일정 관리",
     "스터디 관리",
     "스펙 관리",

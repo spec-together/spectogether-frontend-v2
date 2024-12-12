@@ -6,11 +6,12 @@ export const ContestSpecificInfo = ({ contest }) => {
   const renderContent = () => {
     switch (activeTab) {
       case "상세정보":
-        return contest.details;
+        return contest.description;
+      // TODO : 하단 내용들 완성해야 함
       case "문의/기대평":
-        return contest.inquiries;
+        return "board";
       case "참여신청/취소 안내":
-        return contest.applicationInfo;
+        return "apply";
       default:
         return null;
     }

@@ -21,3 +21,5 @@ export const SOCKET_URL_VIDEO = `${BASE_URL}/video`;
 export const GROUPCALL_SOCKET_URL = `${BASE_URL}/groupcall`;
 export const USER_REGISTER_SPECIFIC = `${BASE_URL}/auth/register/specific`;
 export const GET_USER_STUDYROOMS = `${BASE_URL}/users/studyrooms`;
+export const GET_USER_TODOS = `${BASE_URL}/users/todos`;
+export const GET_CONTESTS = `${BASE_URL}/contests`;

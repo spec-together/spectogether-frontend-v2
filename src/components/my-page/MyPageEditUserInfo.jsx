@@ -1,4 +1,5 @@
 import useUserProfile from "../../hooks/useUserProfile";
+import { Loading } from "../../pages/Loading";
 
 export const MyPageEditUserInfo = () => {
   const { userProfile, loading } = useUserProfile();
@@ -6,7 +7,7 @@ export const MyPageEditUserInfo = () => {
   return (
     <div>
       {loading ? (
-        <span>프로필을 불러오는 중입니다...</span>
+        <Loading />
       ) : (
         <div className="flex flex-row">
           {/* 프로필 이미지 + Lv, 닉네임 */}
