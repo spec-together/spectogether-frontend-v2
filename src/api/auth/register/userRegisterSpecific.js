@@ -1,4 +1,4 @@
-import meetApi from "../../axiosInterceptor.js";
+import stApi from "../../axiosInterceptor.js";
 import { USER_REGISTER_SPECIFIC } from "../../config.js";
 
 export const userRegisterSpecific = async (
@@ -9,7 +9,7 @@ export const userRegisterSpecific = async (
   areas
 ) => {
   try {
-    const response = await meetApi.post(USER_REGISTER_SPECIFIC, {
+    const response = await stApi.post(USER_REGISTER_SPECIFIC, {
       nickname,
       mbti,
       hashtags,

@@ -1,13 +1,13 @@
-import meetApi from "../../axiosInterceptor.js";
+import stApi from "../../axiosInterceptor.js";
 import { CHECK_UNIQUE_EMAIL, CHECK_UNIQUE_PHONE } from "../../config.js";
 
 export const checkUniqueValue = async (type, value) => {
   try {
     let response;
     if (type === "email") {
-      response = await meetApi.post(CHECK_UNIQUE_EMAIL, { email: value });
+      response = await stApi.post(CHECK_UNIQUE_EMAIL, { email: value });
     } else if (type === "phone_number") {
-      response = await meetApi.post(CHECK_UNIQUE_PHONE, {
+      response = await stApi.post(CHECK_UNIQUE_PHONE, {
         phone_number: value,
       });
     }

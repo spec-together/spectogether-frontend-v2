@@ -1,9 +1,9 @@
-import meetApi from "../../axiosInterceptor.js";
+import stApi from "../../axiosInterceptor.js";
 import { GET_USER_PROFILE } from "../../config.js";
 
 export const getUserProfile = async () => {
   try {
-    const response = await meetApi.get(GET_USER_PROFILE);
+    const response = await stApi.get(GET_USER_PROFILE);
 
     // TODO: response가 무엇을 가지고 오는지 확인
     console.log(

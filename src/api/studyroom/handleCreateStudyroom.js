@@ -1,4 +1,4 @@
-import meetApi from "../axiosInterceptor";
+import stApi from "../axiosInterceptor";
 
 export const handleCreateStudyroom = async (studyroomData) => {
   const req = {
@@ -11,7 +11,7 @@ export const handleCreateStudyroom = async (studyroomData) => {
   };
 
   try {
-    const result = await meetApi.post("/studyroom", req);
+    const result = await stApi.post("/studyroom", req);
     return result;
   } catch (error) {
     console.error(`[handleCreateStudyroom] error`, error);
