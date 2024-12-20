@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import stApi from "../../api/axiosInterceptor.js";
-import { GET_CONTESTS } from "../../api/config.js";
+import stApi from "../../../api/axiosInterceptor.js";
+import { GET_CONTESTS } from "../../../api/config.js";
 
-export const useGetContestByPagenation = (page, limit) => {
+export const useGetEventWithPagination = (page, limit) => {
   const [contestList, setContestList] = useState([]);
   const [pagination, setPagination] = useState({});
   const [loading, setLoading] = useState(true);

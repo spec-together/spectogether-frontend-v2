@@ -2,17 +2,17 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { UserProvider } from "./contexts/UserContext";
 import { FeatureTestPage } from "./pages/FeatureTestPage.jsx";
 import { NotFoundPage } from "./pages/error/NotFoundPage";
-import { MainPage } from "./pages/MainPage.jsx";
-import { SearchHeaderLayoutPage } from "./components/layouts/SearchHeaderLayoutPage.jsx";
-import { ContestSpecificsPage } from "./pages/ContestSpecificsPage.jsx";
-import { MyPage } from "./pages/MyPage.jsx";
-import { PageHeaderLayoutPage } from "./components/layouts/PageHeaderLayoutPage.jsx";
-import { StudyroomPage } from "./pages/StudyroomPage.jsx";
-import { NewLoginPage } from "./pages/NewLoginPage.jsx";
-import { NewRegisterPage } from "./pages/NewRegisterPage.jsx";
-import { NewTermsAgreePage } from "./pages/NewTermsAgreePage.jsx";
-import StudyroomVideocallPage from "./pages/StudyroomVideocallPage.jsx";
-import { MyStudyroomListPage } from "./pages/MyStudyroomListPage.jsx";
+import { MainPage } from "./pages/main/MainPage.jsx";
+import { SearchHeaderLayoutPage } from "./pages/layouts/SearchHeaderLayoutPage.jsx";
+import { ContestSpecificsPage } from "./pages/event/ContestSpecificsPage.jsx";
+import { MyPage } from "./pages/mypage/MyPage.jsx";
+import { PageHeaderLayoutPage } from "./pages/layouts/PageHeaderLayoutPage.jsx";
+import { StudyroomPage } from "./pages/studyroom/StudyroomPage.jsx";
+import { LoginPage } from "./pages/login/LoginPage.jsx";
+import { RegisterPage } from "./pages/register/RegisterPage.jsx";
+import { TermsAgreePage } from "./pages/register/TermsAgreePage.jsx";
+import { StudyroomVideocallPage } from "./pages/studyroom/StudyroomVideocallPage.jsx";
+import { MyStudyroomListPage } from "./pages/mypage/MyStudyroomListPage.jsx";
 
 function App() {
   return (
@@ -27,7 +27,7 @@ function App() {
             path="/login"
             element={
               <SearchHeaderLayoutPage>
-                <NewLoginPage />
+                <LoginPage />
               </SearchHeaderLayoutPage>
             }
           />
@@ -35,7 +35,7 @@ function App() {
             path="/register"
             element={
               <SearchHeaderLayoutPage>
-                <NewRegisterPage />
+                <RegisterPage />
               </SearchHeaderLayoutPage>
             }
           />
@@ -43,7 +43,7 @@ function App() {
             path="/register/terms"
             element={
               <SearchHeaderLayoutPage>
-                <NewTermsAgreePage />
+                <TermsAgreePage />
               </SearchHeaderLayoutPage>
             }
           />

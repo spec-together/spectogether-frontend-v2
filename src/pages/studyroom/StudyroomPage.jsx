@@ -1,6 +1,6 @@
-import { StudyroomInfo } from "../components/studyroom/StudyroomInfo";
-import { CalendarForStudyroom } from "../components/studyroom/CalendarForStudyroom";
-import { ChatroomForStudyroom } from "../components/studyroom/ChatroomForStudyroom";
+import { StudyroomInfo } from "../../components/studyroom/StudyroomInfo.jsx";
+import { CalendarForStudyroom } from "../../components/studyroom/CalendarForStudyroom.jsx";
+import { ChatroomForStudyroom } from "../../components/studyroom/ChatroomForStudyroom.jsx";
 
 export const StudyroomPage = () => {
   return (

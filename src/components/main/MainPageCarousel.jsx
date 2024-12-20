@@ -5,19 +5,16 @@ const MainPageCarousel = () => {
 
   const items = [
     {
-      title: "캐러셀 아이템 1",
-      content: "내용 설명 1입니다.",
-      bgColor: "bg-blue-100",
+      source_url:
+        "https://static.onoffmix.com/afv2/attach/2024/11/29/v320c741b5fe07cabcc529129109d6a666.jpg",
     },
     {
-      title: "캐러셀 아이템 2",
-      content: "내용 설명 2입니다.",
-      bgColor: "bg-green-100",
+      source_url:
+        "https://static.onoffmix.com/afv2/attach/2024/12/06/v3cd165194731b8dc7f1c03eaa0c38afbc.jpg",
     },
     {
-      title: "캐러셀 아이템 3",
-      content: "내용 설명 3입니다.",
-      bgColor: "bg-purple-100",
+      source_url:
+        "https://static.onoffmix.com/afv2/attach/2024/12/06/v3d404d135d973a912304f41784ae65b16.jpg",
     },
   ];
 
@@ -41,37 +38,38 @@ const MainPageCarousel = () => {
   };
 
   return (
-    <div className="mx-[1.88rem] relative mb-6 mt-6 overflow-hidden rounded-lg shadow-lg h-60 group">
-      <div
-        className="flex h-full transition-transform duration-500"
-        style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-      >
-        {items.map((item, index) => (
-          <div
-            key={index}
-            className={`flex-none w-full p-4 ${item.bgColor} rounded-md`}
-          >
-            <h2 className="mb-2 text-2xl font-bold">{item.title}</h2>
-            <p>{item.content}</p>
-          </div>
-        ))}
-      </div>
+    <div className="flex justify-center">
+      <div className="relative mb-6 mt-6 overflow-hidden rounded-lg shadow-lg w-[940px] h-[380px] group">
+        <div
+          className="flex h-full transition-transform duration-500"
+          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+        >
+          {items.map((item, index) => (
+            <img
+              src={item.source_url}
+              alt="carousel-item"
+              className="flex-none object-scale-down w-full p-4 rounded-md"
+              key={index}
+            />
+          ))}
+        </div>
 
-      {/* 캐러셀 컨트롤 */}
-      <button
-        onClick={handlePrev}
-        className="absolute p-1 text-white transition-opacity transform -translate-y-1/2 bg-gray-800 bg-opacity-50 rounded-full opacity-0 left-1 top-1/2 group-hover:opacity-100"
-      >
-        <span className="text-sm opacity-70">◀</span>
-        <span className="sr-only">Previous</span>
-      </button>
-      <button
-        onClick={handleNext}
-        className="absolute p-1 text-white transition-opacity transform -translate-y-1/2 bg-gray-800 bg-opacity-50 rounded-full opacity-0 right-1 top-1/2 group-hover:opacity-100"
-      >
-        <span className="text-sm opacity-70">▶</span>
-        <span className="sr-only">Next</span>
-      </button>
+        {/* 캐러셀 컨트롤 */}
+        <button
+          onClick={handlePrev}
+          className="absolute p-1 text-white transition-opacity transform -translate-y-1/2 bg-gray-800 bg-opacity-50 rounded-full opacity-0 left-1 top-1/2 group-hover:opacity-100"
+        >
+          <span className="text-sm opacity-70">◀</span>
+          <span className="sr-only">Previous</span>
+        </button>
+        <button
+          onClick={handleNext}
+          className="absolute p-1 text-white transition-opacity transform -translate-y-1/2 bg-gray-800 bg-opacity-50 rounded-full opacity-0 right-1 top-1/2 group-hover:opacity-100"
+        >
+          <span className="text-sm opacity-70">▶</span>
+          <span className="sr-only">Next</span>
+        </button>
+      </div>
     </div>
   );
 };

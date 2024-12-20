@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { ContestMainInfo } from "../components/contest-specific/ContestMainInfo";
-import { ContestSpecificInfo } from "../components/contest-specific/ContestSpecificInfo";
-import { useGetContestInfo } from "../hooks/useGetContestInfo";
-import { Loading } from "./Loading";
+import { EventMainInfo } from "../../components/event/EventMainInfo.jsx";
+import { EventSpecificInfo } from "../../components/event/EventSpecificInfo.jsx";
+import { useGetEventInfo } from "../../hooks/api-requests/event/useGetEventInfo.jsx";
+import { Loading } from "../Loading.jsx";
 
 export const ContestSpecificsPage = () => {
   const { contestId } = useParams();
-  const { contestInfo, loading } = useGetContestInfo(contestId);
+  const { contestInfo, loading } = useGetEventInfo(contestId);
 
   useEffect(() => {
     console.log(
@@ -36,8 +36,8 @@ export const ContestSpecificsPage = () => {
         <Loading />
       ) : (
         <div>
-          <ContestMainInfo contest={contestInfo} />
-          <ContestSpecificInfo contest={contestInfo} />
+          <EventMainInfo contest={contestInfo} />
+          <EventSpecificInfo contest={contestInfo} />
         </div>
       )}
     </div>

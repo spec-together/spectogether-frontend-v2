@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { getUserProfile } from "../../api/auth/user/getUserProfile.js";
-import { reissueToken } from "../../api/auth/user/reissueToken.js";
+import { getUserProfile } from "../../../api/auth/user/getUserProfile.js";
+import { reissueToken } from "../../../api/auth/user/reissueToken.js";
 
-const useUserProfile = () => {
+const useGetUserProfile = () => {
   const [userProfile, setUserProfile] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
@@ -40,25 +40,25 @@ const useUserProfile = () => {
     const intervalId = setInterval(
       async () => {
         console.log(
-          "[useUserProfile] Interval 시간이 되어 AccessToken 갱신을 시도합니다."
+          "[useGetUserProfile] Interval 시간이 되어 AccessToken 갱신을 시도합니다."
         );
         try {
           const result = await reissueToken();
           console.log(`[useUserProfile] AccessToken Reissue 결과 : ${result}`);
         } catch (err) {
-          console.error("[useUserProfile] AccessToken 재발급 실패", err);
+          console.error("[useGetUserProfile] AccessToken 재발급 실패", err);
         }
       },
       1000 * 60 * 25 // 25분마다
     );
     console.log(
-      "[useUserProfile] Interval을 설정했습니다. 25분마다 AccessToken 갱신을 시도합니다."
+      "[useGetUserProfile] Interval을 설정했습니다. 25분마다 AccessToken 갱신을 시도합니다."
     );
 
     // 컴포넌트가 언마운트되면 setInterval을 클리어
     return () => {
       console.log(
-        "[useUserProfile] 컴포넌트가 언마운트되어 AT 갱신 Interval을 클리어합니다."
+        "[useGetUserProfile] 컴포넌트가 언마운트되어 AT 갱신 Interval을 클리어합니다."
       );
       clearInterval(intervalId);
     };
@@ -67,4 +67,4 @@ const useUserProfile = () => {
   return { userProfile, error, loading }; // 로딩 상태 반환
 };
 
-export default useUserProfile;
+export default useGetUserProfile;

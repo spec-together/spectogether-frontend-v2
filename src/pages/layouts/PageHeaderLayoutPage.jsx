@@ -1,4 +1,4 @@
-import { PageHeader } from "../header/PageHeader";
+import { PageHeader } from "../../components/header/PageHeader.jsx";
 
 export const PageHeaderLayoutPage = ({ children }) => {
   return (

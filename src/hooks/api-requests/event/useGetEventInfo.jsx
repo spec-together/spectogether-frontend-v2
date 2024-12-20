@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import stApi from "../../api/axiosInterceptor.js";
-import { GET_CONTESTS } from "../../api/config.js";
+import stApi from "../../../api/axiosInterceptor.js";
+import { GET_CONTESTS } from "../../../api/config.js";
 
-export const useGetContestInfo = (contestId) => {
+export const useGetEventInfo = (contestId) => {
   const [contestInfo, setContestInfo] = useState({});
   const [loading, setLoading] = useState(true);
 

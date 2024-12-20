@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import useUserProfile from "../hooks/api-requests/useUserProfile.jsx";
+import useGetUserProfile from "../hooks/api-requests/users/useGetUserProfile.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const UserContext = createContext();
@@ -8,7 +8,7 @@ export const useUser = () => useContext(UserContext);
 // TODO : propType 검증 필요
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState({});
-  const { userProfile } = useUserProfile();
+  const { userProfile } = useGetUserProfile();
   const navigate = useNavigate();
   const location = useLocation();
 

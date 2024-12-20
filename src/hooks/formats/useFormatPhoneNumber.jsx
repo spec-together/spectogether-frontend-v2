@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const useFormattedPhoneNumber = (phoneNumber, setPhoneNumber) => {
+const useFormatPhoneNumber = (phoneNumber, setPhoneNumber) => {
   useEffect(() => {
     const formatPhoneNumber = (value) => {
       // 숫자만 남기기
@@ -60,4 +60,4 @@ const useFormattedPhoneNumber = (phoneNumber, setPhoneNumber) => {
   }, [phoneNumber, setPhoneNumber]);
 };
 
-export default useFormattedPhoneNumber;
+export default useFormatPhoneNumber;

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { ContestInfoCard } from "../components/main/ContestInfoCard";
-import MainPageCarousel from "../components/main/MainPageCarousel";
-import { MenuBar } from "../components/menubar/MenuBar";
-import { useGetContestByPagenation } from "../hooks/useGetContestByPagenation";
-import { Loading } from "./Loading";
+import { ContestInfoCard } from "../../components/main/ContestInfoCard.jsx";
+import MainPageCarousel from "../../components/main/MainPageCarousel.jsx";
+import { MenuBar } from "../../components/menubar/MenuBar.jsx";
+import { useGetEventWithPagination } from "../../hooks/api-requests/event/useGetEventWithPagination.jsx";
+import { Loading } from "../Loading.jsx";
 import { se } from "date-fns/locale";
 
 export const MainPage = () => {
@@ -12,7 +12,7 @@ export const MainPage = () => {
 
   const [page10, setPage10] = useState(0);
 
-  const { contestList, pagination, loading, error } = useGetContestByPagenation(
+  const { contestList, pagination, loading, error } = useGetEventWithPagination(
     page,
     limit
   );

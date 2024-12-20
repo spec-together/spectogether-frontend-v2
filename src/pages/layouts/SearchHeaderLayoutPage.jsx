@@ -1,4 +1,4 @@
-import { SearchHeader } from "../header/SearchHeader";
+import { SearchHeader } from "../../components/header/SearchHeader.jsx";
 
 export const SearchHeaderLayoutPage = ({ children }) => {
   return (

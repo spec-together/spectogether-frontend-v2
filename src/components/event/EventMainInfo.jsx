@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CreateStudyroomModal } from "../modals/CreateStudyroomModal";
 
-export const ContestMainInfo = ({ contest }) => {
+export const EventMainInfo = ({ contest }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const contestDetails = [
     {

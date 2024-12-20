@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import stApi from "../../api/axiosInterceptor.js";
-import { GET_USER_STUDYROOMS } from "../../api/config.js";
+import stApi from "../../../api/axiosInterceptor.js";
+import { GET_USER_STUDYROOMS } from "../../../api/config.js";
 
-export const useGetStudyrooms = () => {
+export const useGetStudyroomListByUser = () => {
   const [studyrooms, setStudyrooms] = useState([]);
   const [loading, setLoading] = useState(true);
 

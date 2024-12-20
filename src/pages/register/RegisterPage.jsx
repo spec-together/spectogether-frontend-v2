@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import useFormattedPhoneNumber from "../../hooks/formats/useFormattedPhoneNumber.jsx";
+import useFormatPhoneNumber from "../../hooks/formats/useFormatPhoneNumber.jsx";
 import { ShowAndHideIcon } from "../../components/icons/ShowAndHideIcon.jsx";
 import { VerifyTrueFalseIcon } from "../../components/icons/VerifyTrueFalseicon.jsx";
 import { checkUniqueValue } from "../../api/auth/register/checkUniqueValue.js";
@@ -15,7 +15,7 @@ import { userRegister } from "../../api/auth/register/userRegister.js";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-export const NewRegisterPage = () => {
+export const RegisterPage = () => {
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
@@ -72,7 +72,7 @@ export const NewRegisterPage = () => {
   }, [phoneNumber]);
 
   // 전화번호 입력 시 '-' 자동 입력
-  useFormattedPhoneNumber(phoneNumber, setPhoneNumber);
+  useFormatPhoneNumber(phoneNumber, setPhoneNumber);
 
   // 카카오톡으로 회원가입 시 email은 고정하도록 하는 부분
   useEffect(() => {

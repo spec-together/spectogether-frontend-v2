@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { MyPageEditUserInfo } from "../components/my-page/MyPageEditUserInfo";
-import { MyStudyroomListPage } from "./MyStudyroomListPage";
-import { MyTodoList } from "../components/my-page/MyTodoList";
+import { MyPageEditUserInfo } from "../../components/mypage/MyPageEditUserInfo.jsx";
+import { MyStudyroomListPage } from "./MyStudyroomListPage.jsx";
+import { MyTodoList } from "../../components/mypage/MyTodoList.jsx";
 
 export const MyPage = () => {
   const [activeTab, setActiveTab] = useState("회원정보수정");

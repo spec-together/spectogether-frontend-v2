@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import CheckBox from "../../components/register/CheckBox.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useGetTerms } from "../../hooks/api-requests/useGetTerms.jsx";
+import { useGetTerms } from "../../hooks/api-requests/register/useGetTerms.jsx";
 
-export const NewTermsAgreePage = () => {
+export const TermsAgreePage = () => {
   const [agreeAll, setAgreeAll] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState({});
   const location = useLocation();

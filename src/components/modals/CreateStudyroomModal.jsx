@@ -21,12 +21,11 @@ export const CreateStudyroomModal = ({ isOpen, onClose, autofill }) => {
       setTargetId(autofill.targetTitle);
       setAutofillEnabled(true);
     }
-  }, []);
+  }, [autofill]);
 
   const handleCreateStudyroomButtonClick = async (e) => {
     e.preventDefault();
     try {
-      // 여기에서 스터디룸 생성 로직을 추가하세요.
       const result = await handleCreateStudyroom({
         title,
         subtitle,
@@ -45,12 +44,16 @@ export const CreateStudyroomModal = ({ isOpen, onClose, autofill }) => {
   };
 
   const toggleDropdown = () => {
-    setIsDropdownOpen((prev) => !prev);
+    if (!autofillEnabled) {
+      setIsDropdownOpen((prev) => !prev);
+    }
   };
 
   const handleOptionSelect = (option) => {
-    setTargetType(option);
-    setIsDropdownOpen(false);
+    if (!autofillEnabled) {
+      setTargetType(option);
+      setIsDropdownOpen(false);
+    }
   };
 
   useEffect(() => {
@@ -140,16 +143,22 @@ export const CreateStudyroomModal = ({ isOpen, onClose, autofill }) => {
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 />
                 <div
-                  className="flex items-center justify-between w-full p-3 border border-blue-300 rounded-lg bg-blue-50"
+                  className={`flex items-center justify-between w-full p-3 border border-blue-300 rounded-lg bg-blue-50 ${
+                    autofillEnabled ? "cursor-not-allowed" : "cursor-pointer"
+                  }`}
                   onClick={toggleDropdown}
-                  ref={dropdownRef}
                 >
                   <span className="text-gray-500">
                     {fileName || "이미지 파일 선택"}
                   </span>
                   <button
                     type="button"
-                    className="px-4 py-1 text-sm text-blue-600 bg-white rounded-md shadow-sm hover:bg-blue-100"
+                    className={`px-4 py-1 text-sm text-blue-600 bg-white rounded-md shadow-sm ${
+                      autofillEnabled
+                        ? "pointer-events-none opacity-50"
+                        : "hover:bg-blue-100"
+                    }`}
+                    disabled={autofillEnabled}
                   >
                     파일 선택
                   </button>
@@ -163,11 +172,13 @@ export const CreateStudyroomModal = ({ isOpen, onClose, autofill }) => {
             </div>
           </div>
           {/* 스터디 목적 - 드롭다운 변경 */}
-          <div className="relative flex items-center" ref={dropdownRef}>
+          <div className="relative flex items-center">
             <label className="w-1/3 text-gray-700">스터디 유형</label>
             <div className="w-2/3">
               <div
-                className="flex items-center justify-between p-3 border border-blue-300 rounded-lg cursor-pointer bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={`flex items-center justify-between p-3 border border-blue-300 rounded-lg cursor-pointer bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  autofillEnabled ? "cursor-not-allowed opacity-50" : ""
+                }`}
                 onClick={toggleDropdown}
               >
                 <span className="text-gray-500">
@@ -190,7 +201,7 @@ export const CreateStudyroomModal = ({ isOpen, onClose, autofill }) => {
                   />
                 </svg>
               </div>
-              {isDropdownOpen && (
+              {isDropdownOpen && !autofillEnabled && (
                 <div className="absolute z-20 w-2/3 mt-1 bg-white border border-blue-300 rounded-lg shadow-lg">
                   <button
                     type="button"

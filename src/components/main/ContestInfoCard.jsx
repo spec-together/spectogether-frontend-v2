@@ -15,12 +15,12 @@ export const ContestInfoCard = ({ contest }) => {
       />
       <div className="flex flex-col items-start justify-start p-4">
         <h2 className="text-xl font-semibold text-gray-800">{contest.title}</h2>
-        {contest.subtitle && (
+        {/* {contest.subtitle && (
           <h3 className="mt-1 font-medium text-gray-600 text-md">
-            {contest.subtitle}
+            {contest.subtitle.slice(0, 18)}...
           </h3>
-        )}
-        <p className="mt-2 text-sm text-gray-500">Hosted by: {contest.host}</p>
+        )} */}
+        <p className="mt-2 text-sm text-gray-500">주최: {contest.host}</p>
       </div>
     </div>
   );

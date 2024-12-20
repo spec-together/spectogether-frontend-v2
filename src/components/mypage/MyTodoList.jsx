@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useGetUserTodoList } from "../../hooks/api-requests/useGetUserTodoList.jsx";
+import { useGetTodoListByUser } from "../../hooks/api-requests/users/useGetTodoListByUser.jsx";
 import { Loading } from "../../pages/Loading";
 import { CompleteTodoModal } from "../modals/CompleteTodoModal";
 
@@ -7,7 +7,7 @@ export const MyTodoList = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedTodoId, setSelectedTodoId] = useState(null);
 
-  const { todos, loading } = useGetUserTodoList();
+  const { todos, loading } = useGetTodoListByUser();
 
   const openModal = (todoId) => {
     if (todoId) {

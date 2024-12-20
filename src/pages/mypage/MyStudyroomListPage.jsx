@@ -1,9 +1,9 @@
-import { StudyroomCard } from "../components/studyroom/StudyroomCard";
-import { useGetStudyrooms } from "../hooks/useGetStudyrooms";
-import { Loading } from "./Loading";
+import { StudyroomCard } from "../../components/studyroom/StudyroomCard.jsx";
+import { useGetStudyroomListByUser } from "../../hooks/api-requests/users/useGetStudyroomListByUser.jsx";
+import { Loading } from "../Loading.jsx";
 
 export const MyStudyroomListPage = () => {
-  const { studyrooms, loading } = useGetStudyrooms();
+  const { studyrooms, loading } = useGetStudyroomListByUser();
 
   return (
     <div className="flex flex-col items-center justify-center">

@@ -1,13 +1,13 @@
 import { KakaoLoginButton } from "../../components/login/KakaoLoginButton.jsx";
 import { LoginToggles } from "../../components/login/LoginToggles.jsx";
 import { useState, useEffect } from "react";
-import useFormattedPhoneNumber from "../../hooks/formats/useFormattedPhoneNumber.jsx";
+import useFormatPhoneNumber from "../../hooks/formats/useFormatPhoneNumber.jsx";
 import { handleUserLogin } from "../../api/auth/user/handleUserLogin.js";
 import { useUser } from "../../contexts/UserContext.jsx";
 import { useNavigate } from "react-router-dom";
 import { ShowAndHideIcon } from "../../components/icons/ShowAndHideIcon.jsx";
 
-export const NewLoginPage = () => {
+export const LoginPage = () => {
   const [loginId, setLoginId] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -21,7 +21,7 @@ export const NewLoginPage = () => {
     }
   }, [password]);
 
-  useFormattedPhoneNumber(loginId, setLoginId);
+  useFormatPhoneNumber(loginId, setLoginId);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

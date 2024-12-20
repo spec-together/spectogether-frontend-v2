@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import io from "socket.io-client";
-import { SOCKET_URL_VIDEO } from "../api/config";
-import { Loading } from "./Loading";
+import { SOCKET_URL_VIDEO } from "../../api/config.js";
+import { Loading } from "../Loading.jsx";
 import { useParams } from "react-router-dom";
 
 export const StudyroomVideocallPage = () => {

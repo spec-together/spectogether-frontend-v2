@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export const ContestSpecificInfo = ({ contest }) => {
+export const EventSpecificInfo = ({ contest }) => {
   const [activeTab, setActiveTab] = useState("상세정보");
 
   const renderContent = () => {

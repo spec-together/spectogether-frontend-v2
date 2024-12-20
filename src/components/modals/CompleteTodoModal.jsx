@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useGetTodoInfo } from "../../hooks/useGetTodoInfo";
+import { useGetTodoInfoById } from "../../hooks/api-requests/users/useGetTodoInfoById.jsx";
 import { Loading } from "../../pages/Loading";
 import { CloseModalButton } from "./CloseModalButton";
 
@@ -10,7 +10,7 @@ export const CompleteTodoModal = ({ isOpen, onClose, todoId }) => {
 
   const dropdownRef = useRef();
 
-  const { info, assignedMember, loading } = useGetTodoInfo(todoId);
+  const { info, assignedMember, loading } = useGetTodoInfoById(todoId);
 
   const handleCompleteTodoButtonClick = async (e) => {
     e.preventDefault();
