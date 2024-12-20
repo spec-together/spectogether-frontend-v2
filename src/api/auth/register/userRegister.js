@@ -1,16 +1,9 @@
-import meetApi from "../../axiosInterceptor.js";
+import stApi from "../../axiosInterceptor.js";
 import { USER_REGISTER } from "../../config.js";
 
 export const userRegister = async (data) => {
-  const { name, email, phone_number, password } = data;
-
   try {
-    await meetApi.post(USER_REGISTER, {
-      name,
-      email,
-      phone_number,
-      password,
-    });
+    await stApi.post(USER_REGISTER, data);
 
     // 성공적인 응답 처리
     return { status: true, message: "User created" };

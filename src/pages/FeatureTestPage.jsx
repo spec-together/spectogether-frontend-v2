@@ -7,7 +7,7 @@ import { LogoutButton } from "../components/login/LogoutButton.jsx";
 export const FeatureTestPage = () => {
   const { user } = useUser();
   // const navigate = useNavigate();
-  // const { userProfile } = useUserProfile();
+  // const { userProfile } = useGetUserProfile();
   const handleGetProfile = async () => {
     alert(`ID: ${user.user_id}\nNAME : ${user.username}`);
   };

@@ -1,52 +1,33 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { LoginPage } from "./pages/login/LoginPage.jsx";
-import { RegisterPage } from "./components/register/RegisterPage";
 import { UserProvider } from "./contexts/UserContext";
 import { FeatureTestPage } from "./pages/FeatureTestPage.jsx";
-import { LocalLoginPage } from "./pages/login/LocalLoginPage.jsx";
-import { ResetPasswordPage } from "./pages/lostandfound/ResetPasswordPage";
-import { FindIdPage } from "./pages/lostandfound/FindIdPage";
 import { NotFoundPage } from "./pages/error/NotFoundPage";
-import { TermsPage } from "./components/register/TermsPage";
-import { ChatListPage } from "./pages/chat/ChatListPage.jsx";
-import { ChatPage } from "./pages/chat/ChatPage.jsx";
-import { EmailCheckNonUser } from "./components/register/EmailCheck.jsx";
-import { VideoCallPage } from "./pages/videocall/VideoCallPage";
-import { GroupCallPage } from "./pages/videocall/GroupCallPage";
-import { MeetPage } from "./pages/meet/MeetPage";
-import { MeetroomPage } from "./pages/meet/MeetroomPage";
-import { SetSpecificProfilePage } from "./components/register/SetSpecificProfilePage";
-import KakaoMapPage from "./components/location/NaverMap.jsx";
-import { MainPage } from "./pages/MainPage.jsx";
-import { SearchHeaderLayoutPage } from "./components/layouts/SearchHeaderLayoutPage.jsx";
-import { ContestSpecificsPage } from "./pages/ContestSpecificsPage.jsx";
-import { MyPage } from "./pages/MyPage.jsx";
-import { PageHeaderLayoutPage } from "./components/layouts/PageHeaderLayoutPage.jsx";
-import { StudyroomPage } from "./pages/StudyroomPage.jsx";
-import { NewLoginPage } from "./pages/NewLoginPage.jsx";
-import { NewRegisterPage } from "./pages/NewRegisterPage.jsx";
-import { NewTermsAgreePage } from "./pages/NewTermsAgreePage.jsx";
-import StudyroomVideocallPage from "./pages/StudyroomVideocallPage.jsx";
+import { MainPage } from "./pages/main/MainPage.jsx";
+import { SearchHeaderLayoutPage } from "./pages/layouts/SearchHeaderLayoutPage.jsx";
+import { ContestSpecificsPage } from "./pages/event/ContestSpecificsPage.jsx";
+import { MyPage } from "./pages/mypage/MyPage.jsx";
+import { PageHeaderLayoutPage } from "./pages/layouts/PageHeaderLayoutPage.jsx";
+import { StudyroomPage } from "./pages/studyroom/StudyroomPage.jsx";
+import { LoginPage } from "./pages/login/LoginPage.jsx";
+import { RegisterPage } from "./pages/register/RegisterPage.jsx";
+import { TermsAgreePage } from "./pages/register/TermsAgreePage.jsx";
+import { StudyroomVideocallPage } from "./pages/studyroom/StudyroomVideocallPage.jsx";
+import { MyStudyroomListPage } from "./pages/mypage/MyStudyroomListPage.jsx";
 
 function App() {
   return (
     <Router>
       <UserProvider>
         <Routes>
+          {/* 404 */}
           <Route path="*" element={<NotFoundPage />} />
-          <Route
-            path="/"
-            element={
-              <SearchHeaderLayoutPage>
-                <MainPage />
-              </SearchHeaderLayoutPage>
-            }
-          />
+
+          {/* 로그인, 회원가입 페이지 */}
           <Route
             path="/login"
             element={
               <SearchHeaderLayoutPage>
-                <NewLoginPage />
+                <LoginPage />
               </SearchHeaderLayoutPage>
             }
           />
@@ -54,7 +35,7 @@ function App() {
             path="/register"
             element={
               <SearchHeaderLayoutPage>
-                <NewRegisterPage />
+                <RegisterPage />
               </SearchHeaderLayoutPage>
             }
           />
@@ -62,10 +43,12 @@ function App() {
             path="/register/terms"
             element={
               <SearchHeaderLayoutPage>
-                <NewTermsAgreePage />
+                <TermsAgreePage />
               </SearchHeaderLayoutPage>
             }
           />
+
+          {/* 공모전 페이지 */}
           <Route
             path="/contest/:contestId"
             element={
@@ -74,11 +57,23 @@ function App() {
               </SearchHeaderLayoutPage>
             }
           />
+
+          {/* 메인페이지 */}
           <Route
-            path="/mypage"
+            path="/"
+            element={
+              <SearchHeaderLayoutPage>
+                <MainPage />
+              </SearchHeaderLayoutPage>
+            }
+          />
+
+          {/* 스터디룸 */}
+          <Route
+            path="/studyroom"
             element={
               <PageHeaderLayoutPage>
-                <MyPage />
+                <MyStudyroomListPage />
               </PageHeaderLayoutPage>
             }
           />
@@ -90,23 +85,29 @@ function App() {
               </PageHeaderLayoutPage>
             }
           />
+          <Route
+            path="/studyroom/:studyroomId/video"
+            element={
+              <PageHeaderLayoutPage>
+                <StudyroomVideocallPage />
+              </PageHeaderLayoutPage>
+            }
+          />
+
+          {/* 마이페이지 */}
+          <Route
+            path="/mypage"
+            element={
+              <PageHeaderLayoutPage>
+                <MyPage />
+              </PageHeaderLayoutPage>
+            }
+          />
+
+          {/* 기능 테스트용 페이지들 */}
           <Route path="/test-videocall" element={<StudyroomVideocallPage />} />
 
           <Route path="/test" element={<FeatureTestPage />} />
-          <Route path="/email-check" element={<EmailCheckNonUser />} />
-          <Route
-            path="/register/specific"
-            element={<SetSpecificProfilePage />}
-          />
-          <Route path="/find/id" element={<FindIdPage />} />
-          <Route path="/find/pw" element={<ResetPasswordPage />} />
-          <Route path="/chat" element={<ChatListPage />} />
-          <Route path="/chat/:chatroomId" element={<ChatPage />} />
-          <Route path="/videocall" element={<VideoCallPage />} />
-          <Route path="/groupcall" element={<GroupCallPage />} />
-          <Route path="/meet" element={<MeetPage />} />
-          <Route path="/meet/:meetroomId" element={<MeetroomPage />} />
-          <Route path="/kakaomap" element={<KakaoMapPage />} />
         </Routes>
       </UserProvider>
     </Router>

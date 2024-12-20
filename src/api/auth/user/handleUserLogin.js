@@ -1,25 +1,24 @@
 import { setAccessTokenToLocalStorage } from "../../../services/setAccessTokenToLocalStorage.js";
-import meetApi from "../../axiosInterceptor.js";
+import stApi from "../../axiosInterceptor.js";
 import { USER_LOGIN } from "../../config.js";
 
 export const handleUserLogin = async (loginID, password) => {
   try {
-    const response = await meetApi.post(USER_LOGIN, {
-      loginID: loginID,
+    const response = await stApi.post(USER_LOGIN, {
+      login_id: loginID,
       password: password,
     });
 
     console.log("response : ", response.data);
-    const { token, user, message } = response.data;
-    const { user_id, username } = user;
-    setAccessTokenToLocalStorage(token);
-    console.log(
-      `[handleUserLogin] 서버 메세지 : ${message}\n사용자명 ${username} 로그인 성공!`
-    );
+    const { access_token, user } = response.data.success;
+    const { user_id, name, nickname } = user;
 
-    return { user_id, username };
+    setAccessTokenToLocalStorage(access_token);
+    console.log(`[handleUserLogin] 로그인 성공!`);
+
+    return { user_id, name, nickname };
   } catch (error) {
-    if (error.response.status === 401) {
+    if (error.response && error.response.status === 401) {
       console.error("잘못된 아이디 또는 비밀번호를 입력했습니다.");
       alert("잘못된 아이디 또는 비밀번호를 입력했습니다.");
       return null;

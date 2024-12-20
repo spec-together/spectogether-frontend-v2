@@ -28,10 +28,16 @@ export const handleKakaoLogin = () => {
         //   );
         // }, 500);
       } else {
-        const { user_id, username, token } = event.data;
-        console.log("[handleKakaoLogin] User found:", user_id, username, token);
+        const { user_id, name, nickname, token } = event.data;
+        console.log(
+          "[handleKakaoLogin] User found:",
+          user_id,
+          name,
+          nickname,
+          token
+        );
         setAccessTokenToLocalStorage(token);
-        resolve({ status: true, user: { user_id, username } }); // Promise 해결
+        resolve({ status: true, user: { user_id, name, nickname } }); // Promise 해결
         // setTimeout(() => {
         //   window.location.reload();
         //   console.log(

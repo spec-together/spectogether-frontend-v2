@@ -1,9 +1,9 @@
-import meetApi from "../../axiosInterceptor";
+import stApi from "../../axiosInterceptor";
 import { USER_LOGOUT } from "../../config";
 
 export const handleUserLogout = async () => {
   try {
-    const result = meetApi.get(USER_LOGOUT);
+    const result = await stApi.get(USER_LOGOUT, { withCredentials: true });
     console.log(`[handleUserLogout] result : ${result}`);
     return result;
   } catch (error) {

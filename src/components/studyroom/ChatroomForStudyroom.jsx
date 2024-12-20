@@ -10,7 +10,7 @@ export const ChatroomForStudyroom = () => {
   const { studyroomId } = useParams();
 
   return (
-    <div className="flex flex-col flex-grow mr-11">
+    <div className="flex flex-col flex-grow mr-11 h-[65rem]">
       {/* chatroom header */}
       <div className="flex flex-row w-full border-b pb-4 border-[#7b7b7b]">
         <span className="text-2xl font-medium font-pretendard">

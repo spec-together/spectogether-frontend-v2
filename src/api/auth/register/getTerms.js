@@ -1,4 +1,4 @@
-import meetApi from "../../axiosInterceptor.js";
+import stApi from "../../axiosInterceptor.js";
 import { GET_TERMS } from "../../config.js";
 
 export const getTerms = async () => {
@@ -24,7 +24,7 @@ export const getTerms = async () => {
   ];
 
   try {
-    const response = await meetApi.get(GET_TERMS);
+    const response = await stApi.get(GET_TERMS);
 
     console.log("Terms Response:", response.data);
 

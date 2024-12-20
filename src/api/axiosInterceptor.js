@@ -1,14 +1,14 @@
 import axios from "axios";
 
 // Create an instance of meet
-const meetApi = axios.create({
+const stApi = axios.create({
   timeout: 1000,
 });
 
 // Add a request interceptor to include withCredentials
-meetApi.interceptors.request.use(
+stApi.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("MEET_ACCESS_TOKEN");
+    const token = localStorage.getItem("SPECTOGETHER_AT");
     if (token) {
       console.log("[axios intercepter] Header에 AccessToken을 포함합니다.");
       config.headers.Authorization = `Bearer ${token}`;
@@ -17,7 +17,7 @@ meetApi.interceptors.request.use(
         "[axios intercepter] LocalStorage에 AccessToken이 없습니다."
       );
     }
-    config.withCredentials = true; // TODO : 뺴
+    // config.withCredentials = true; // TODO : 뺴
     return config;
   },
   (error) => {
@@ -26,9 +26,11 @@ meetApi.interceptors.request.use(
 );
 
 // Add a response interceptor
-meetApi.interceptors.response.use(
+stApi.interceptors.response.use(
   (response) => {
     // Any status code that lie within the range of 2xx cause this function to trigger
+    console.log("[axios intercepter] response : ", response);
+
     return response;
   },
   (error) => {
@@ -54,4 +56,4 @@ meetApi.interceptors.response.use(
   }
 );
 
-export default meetApi;
+export default stApi;
