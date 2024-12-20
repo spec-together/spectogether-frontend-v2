@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import useFormattedPhoneNumber from "../hooks/useFormattedPhoneNumber";
-import { ShowAndHideIcon } from "../components/icons/ShowAndHideIcon";
-import { VerifyTrueFalseIcon } from "../components/icons/VerifyTrueFalseicon";
-import { checkUniqueValue } from "../api/auth/register/checkUniqueValue";
+import useFormattedPhoneNumber from "../../hooks/formats/useFormattedPhoneNumber.jsx";
+import { ShowAndHideIcon } from "../../components/icons/ShowAndHideIcon.jsx";
+import { VerifyTrueFalseIcon } from "../../components/icons/VerifyTrueFalseicon.jsx";
+import { checkUniqueValue } from "../../api/auth/register/checkUniqueValue.js";
 import {
   validateEmailFormat,
   validatePhoneNumberFormat,
   validateName,
   validatePassword,
-} from "../api/auth/register/validations";
-import { userRegister } from "../api/auth/register/userRegister";
+} from "../../api/auth/register/validations.js";
+import { userRegister } from "../../api/auth/register/userRegister.js";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";

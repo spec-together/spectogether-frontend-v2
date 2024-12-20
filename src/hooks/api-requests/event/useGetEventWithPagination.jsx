@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import stApi from "../api/axiosInterceptor";
-import { GET_CONTESTS } from "../api/config";
+import stApi from "../../api/axiosInterceptor.js";
+import { GET_CONTESTS } from "../../api/config.js";
 
 export const useGetContestByPagenation = (page, limit) => {
   const [contestList, setContestList] = useState([]);

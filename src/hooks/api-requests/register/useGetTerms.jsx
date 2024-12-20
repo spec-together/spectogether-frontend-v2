@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import stApi from "../api/axiosInterceptor";
-import { GET_TERMS } from "../api/config";
+import stApi from "../../api/axiosInterceptor.js";
+import { GET_TERMS } from "../../api/config.js";
 
 export const useGetTerms = () => {
   const [terms, setTerms] = useState("");

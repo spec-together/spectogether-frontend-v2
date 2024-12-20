@@ -1,4 +1,4 @@
-import useUserProfile from "../../hooks/useUserProfile";
+import useUserProfile from "../../hooks/api-requests/useUserProfile.jsx";
 import { Loading } from "../../pages/Loading";
 
 export const MyPageEditUserInfo = () => {

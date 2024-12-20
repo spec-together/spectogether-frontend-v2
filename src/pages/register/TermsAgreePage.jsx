@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import CheckBox from "../components/register/CheckBox";
+import CheckBox from "../../components/register/CheckBox.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useGetTerms } from "../hooks/useGetTerms";
+import { useGetTerms } from "../../hooks/api-requests/useGetTerms.jsx";
 
 export const NewTermsAgreePage = () => {
   const [agreeAll, setAgreeAll] = useState(false);

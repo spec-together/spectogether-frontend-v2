@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import stApi from "../api/axiosInterceptor";
-import { GET_USER_STUDYROOMS } from "../api/config";
+import stApi from "../../api/axiosInterceptor.js";
+import { GET_USER_STUDYROOMS } from "../../api/config.js";
 
 export const useGetStudyrooms = () => {
   const [studyrooms, setStudyrooms] = useState([]);

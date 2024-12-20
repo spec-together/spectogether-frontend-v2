@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import useUserProfile from "../hooks/useUserProfile";
+import useUserProfile from "../hooks/api-requests/useUserProfile.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const UserContext = createContext();

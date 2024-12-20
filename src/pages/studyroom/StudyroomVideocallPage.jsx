@@ -4,7 +4,7 @@ import { SOCKET_URL_VIDEO } from "../api/config";
 import { Loading } from "./Loading";
 import { useParams } from "react-router-dom";
 
-const StudyroomVideocallPage = () => {
+export const StudyroomVideocallPage = () => {
   const [muted, setMuted] = useState(false);
   const [cameraOff, setCameraOff] = useState(false);
   const [cameras, setCameras] = useState([]);
@@ -274,6 +274,4 @@ const Video = ({ stream }) => {
   return (
     <video ref={ref} autoPlay playsInline width="400" height="300"></video>
   );
-};
-
-export default StudyroomVideocallPage;
+};{}

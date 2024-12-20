@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import stApi from "../api/axiosInterceptor";
-import { GET_USER_TODOS } from "../api/config";
+import stApi from "../../api/axiosInterceptor.js";
+import { GET_USER_TODOS } from "../../api/config.js";
 
 export const useGetTodoInfo = (todoId) => {
   const [info, setInfo] = useState({});

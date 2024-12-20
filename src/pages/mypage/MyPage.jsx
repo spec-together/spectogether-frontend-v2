@@ -18,6 +18,8 @@ export const MyPage = () => {
         return <MyStudyroomListPage />;
       case "스펙 관리":
         return "스펙 관리";
+      case "내 문의사항":
+        return "내 문의사항";
       default:
         return null;
     }
@@ -29,6 +31,7 @@ export const MyPage = () => {
     "일정 관리",
     "스터디 관리",
     "스펙 관리",
+    "내 문의사항",
   ];
 
   return (

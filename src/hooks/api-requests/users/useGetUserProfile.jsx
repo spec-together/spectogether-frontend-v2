@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { getUserProfile } from "../api/auth/user/getUserProfile.js";
-import { reissueToken } from "../api/auth/user/reissueToken.js";
+import { getUserProfile } from "../../api/auth/user/getUserProfile.js";
+import { reissueToken } from "../../api/auth/user/reissueToken.js";
 
 const useUserProfile = () => {
   const [userProfile, setUserProfile] = useState(null);
