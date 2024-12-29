@@ -4,43 +4,49 @@ import MainPageCarousel from "../../components/main/MainPageCarousel.jsx";
 import { MenuBar } from "../../components/menubar/MenuBar.jsx";
 import { useGetEventWithPagination } from "../../hooks/api-requests/event/useGetEventWithPagination.jsx";
 import { Loading } from "../Loading.jsx";
-import { se } from "date-fns/locale";
+import { Footer } from "../../components/header/Footer.jsx";
 
 export const MainPage = () => {
-  const [page, setPage] = useState(1);
-  const [limit] = useState(30); // Assuming limit is fixed at 10
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const [page10, setPage10] = useState(0);
+  const { data, error, isLoading, isError, isFetching, refetch } =
+    useGetEventWithPagination(currentPage, limit);
 
-  const { contestList, pagination, loading, error } = useGetEventWithPagination(
-    page,
-    limit
-  );
-
-  const totalPages = pagination.total_pages || 1;
+  // "pagination": {
+  //     "totalItems": 150,
+  //     "totalPages": 15,
+  //     "next": "/events?page=2",
+  //     "previous": null,
+  //     "page": 1,
+  //     "limit": 10
+  // }
 
   const handlePageChange = (newPage) => {
     if (newPage < 1 || newPage > totalPages) return;
-    setPage(newPage);
+    setCurrentPage(newPage);
   };
 
   useEffect(() => {
-    setPage(page10 * 10 + page);
-  }, [page10]);
+    // 데이터가 바뀌면 총 페이지 수를 업데이트
+    setTotalPages(data?.pagination.totalPages || 1);
+  }, [data]);
 
   return (
     <div>
       <MenuBar />
       <MainPageCarousel />
       {/* 공모전 정보를 보여주는 카드 섹션 */}
-      {loading ? (
+      {isLoading ? (
         <Loading />
       ) : (
         <>
           <div className="mx-[1.88rem] mt-12 grid grid-cols-4 gap-7 justify-items-center">
-            {contestList.map((contest) => (
-              <ContestInfoCard key={contest.contest_id} contest={contest} />
-            ))}
+            {data.events &&
+              data.events.map((contest) => (
+                <ContestInfoCard key={contest.event_id} contest={contest} />
+              ))}
           </div>
           {/* 페이지네이션 섹션 */}
           <div className="flex justify-center mt-8">
@@ -49,45 +55,45 @@ export const MainPage = () => {
                 {/* Previous Button */}
                 <li>
                   <button
-                    onClick={() => setPage10((prev) => prev - 1)}
-                    disabled={page === 1}
-                    className={`px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 ${
-                      page === 1 ? "cursor-not-allowed opacity-50" : ""
+                    onClick={() => setCurrentPage((prev) => prev - 1)}
+                    disabled={currentPage === 1}
+                    className={`px-3 py-2 ml-0 mb-5 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 ${
+                      currentPage === 1 ? "cursor-not-allowed opacity-50" : ""
                     }`}
                   >
-                    Previous
+                    이전
                   </button>
                 </li>
                 {/* Page Numbers */}
-                {Array.from(
-                  { length: 10 },
-                  (_, idx) => page10 * 10 + idx + 1
-                ).map((pageNumber) =>
-                  pageNumber < totalPages ? (
-                    <li key={pageNumber}>
-                      <button
-                        onClick={() => handlePageChange(pageNumber)}
-                        className={`px-3 py-2 leading-tight border border-gray-300 ${
-                          page === pageNumber
-                            ? "text-blue-600 bg-blue-50"
-                            : "text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700"
-                        }`}
-                      >
-                        {pageNumber}
-                      </button>
-                    </li>
-                  ) : null
+                {Array.from({ length: 10 }, (_, idx) => idx + 1).map(
+                  (pageNumber) =>
+                    pageNumber <= totalPages ? (
+                      <li key={pageNumber} className="mb-5">
+                        <button
+                          onClick={() => handlePageChange(pageNumber)}
+                          className={`px-3 py-2 leading-tight border border-gray-300 ${
+                            currentPage === pageNumber
+                              ? "text-blue-600 bg-blue-50"
+                              : "text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700"
+                          }`}
+                        >
+                          {pageNumber}
+                        </button>
+                      </li>
+                    ) : null
                 )}
                 {/* Next Button */}
                 <li>
                   <button
-                    onClick={() => setPage10((prev) => prev + 1)}
-                    disabled={page === totalPages}
-                    className={`px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 ${
-                      page === totalPages ? "cursor-not-allowed opacity-50" : ""
+                    onClick={() => setCurrentPage((prev) => prev + 1)}
+                    disabled={currentPage === totalPages}
+                    className={`px-3 py-2 mb-5 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 ${
+                      currentPage === totalPages
+                        ? "cursor-not-allowed opacity-50"
+                        : ""
                     }`}
                   >
-                    Next
+                    다음
                   </button>
                 </li>
               </ul>
@@ -101,6 +107,8 @@ export const MainPage = () => {
           에러가 발생했습니다: {error.message}
         </div>
       )}
+
+      <Footer />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-export const BASE_URL = "http://localhost:9999";
+export const BASE_URL = "http://api.st.skyofseoul.synology.me";
 export const USER_LOGIN = `${BASE_URL}/auth/login/local`;
 export const USER_LOGOUT = `${BASE_URL}/auth/logout`;
 export const USER_REGISTER = `${BASE_URL}/auth/register`;
@@ -22,4 +22,5 @@ export const GROUPCALL_SOCKET_URL = `${BASE_URL}/groupcall`;
 export const USER_REGISTER_SPECIFIC = `${BASE_URL}/auth/register/specific`;
 export const GET_USER_STUDYROOMS = `${BASE_URL}/users/studyrooms`;
 export const GET_USER_TODOS = `${BASE_URL}/users/todos`;
-export const GET_CONTESTS = `${BASE_URL}/contests`;
+export const GET_CONTESTS = `${BASE_URL}/events`;
+export const CAROUSEL_AD = `${BASE_URL}/ads/carousel`;

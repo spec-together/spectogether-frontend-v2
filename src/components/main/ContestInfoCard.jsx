@@ -5,11 +5,11 @@ export const ContestInfoCard = ({ contest }) => {
 
   return (
     <div
-      onClick={() => navigate(`/contest/${contest.contest_id}`)}
+      onClick={() => navigate(`/contest/${contest.event_id}`)}
       className="flex flex-col w-[18rem] h-[26rem] border border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
     >
       <img
-        src={contest.image_url}
+        src={contest.poster_image_url}
         alt="contest-thumbnail"
         className="w-full h-[18rem] object-cover rounded-t-lg"
       />

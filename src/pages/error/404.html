@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 - 페이지를 찾을 수 없습니다</title>
+    <style>
+      body {
+        font-family:
+          "Pretendard",
+          -apple-system,
+          sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        color: #2d3436;
+      }
+      h1 {
+        font-size: 5rem;
+        margin: 0;
+        background: linear-gradient(45deg, #6c5ce7, #a8e6cf);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 700;
+      }
+      p {
+        font-size: 1.1rem;
+        color: #636e72;
+        line-height: 1.6;
+      }
+      .btn {
+        display: inline-block;
+        padding: 12px 24px;
+        background: linear-gradient(45deg, #6c5ce7, #a8e6cf);
+        color: white;
+        text-decoration: none;
+        border-radius: 50px;
+        border: none;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        margin: 10px;
+        box-shadow: 0 4px 15px rgba(108, 92, 231, 0.2);
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(108, 92, 231, 0.3);
+      }
+      #mascot {
+        width: 120px;
+        height: 120px;
+        margin: 30px;
+        background: linear-gradient(45deg, #ffeaa7, #fab1a0);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 60px;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+      }
+      #mascot:hover {
+        transform: scale(1.1) rotate(10deg);
+      }
+      #funFact {
+        font-style: italic;
+        margin: 25px 0;
+        color: #636e72;
+        font-size: 0.95rem;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>404</h1>
+    <p>앗! 페이지를 찾을 수 없어요</p>
+    <div id="mascot">🕵️</div>
+    <div id="funFact">재미있는 사실을 알고 싶다면 탐정이를 클릭해보세요!</div>
+    <button class="btn" onclick="playGame()">미니게임 하기</button>
+    <!-- <a href="/" class="btn">홈으로</a> -->
+
+    <script>
+      const funFacts = [
+        "404 오류는 처음 CERN의 연구소에서 사용되었답니다.",
+        "많은 회사들이 404 페이지를 창의적으로 디자인하여 브랜드 이미지를 높이고 있어요.",
+        "404는 '페이지를 찾을 수 없음'을 의미하는 HTTP 상태 코드입니다.",
+        "첫 웹사이트는 1991년에 만들어졌어요. 그때는 404 오류도 없었겠죠?",
+        "어떤 회사들은 404 페이지에 숨겨진 게임이나 이스터 에그를 넣기도 해요.",
+      ];
+
+      document.getElementById("mascot").addEventListener("click", () => {
+        const funFact = document.getElementById("funFact");
+        funFact.textContent =
+          funFacts[Math.floor(Math.random() * funFacts.length)];
+      });
+
+      function playGame() {
+        alert("가위바위보 게임을 시작합니다!");
+        const choices = ["가위", "바위", "보"];
+        const computerChoice = choices[Math.floor(Math.random() * 3)];
+        const userChoice = prompt("가위, 바위, 보 중 하나를 선택하세요.");
+
+        if (userChoice === computerChoice) {
+          alert("비겼습니다!");
+        } else if (
+          (userChoice === "가위" && computerChoice === "보") ||
+          (userChoice === "바위" && computerChoice === "가위") ||
+          (userChoice === "보" && computerChoice === "바위")
+        ) {
+          alert("이겼습니다!");
+        } else {
+          alert("졌습니다!");
+        }
+      }
+    </script>
+  </body>
+</html>
