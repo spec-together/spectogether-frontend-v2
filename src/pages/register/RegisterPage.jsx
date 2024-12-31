@@ -126,7 +126,7 @@ export const RegisterPage = () => {
   useEffect(() => {
     console.log("[회원가입 : 메인] state로 넘어온 약관 : ", location.state);
     // TODO : type에 따른 구별 처리 및 정보를 자동으로 채웠을 떄에는 disabled 처리
-    if (location.state) {
+    if (location.state?.user) {
       setEmail(location.state?.user.email || "");
       setRegisterType(location.state?.type ? "oauth" : "local");
       setIsOAuthRegister(true);
