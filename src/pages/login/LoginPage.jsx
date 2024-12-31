@@ -13,7 +13,7 @@ export const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const { user, setUser } = useUser();
+  const { user, login } = useUser();
 
   useEffect(() => {
     if (password.includes(" ") || /[ㄱ-ㅎㅏ-ㅣ가-힣]/.test(password)) {
@@ -26,9 +26,11 @@ export const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const checked_user = await handleUserLogin(loginId, password);
+    const trimmedLoginId = loginId.replace(/-/g, "");
+
+    const checked_user = await handleUserLogin(trimmedLoginId, password);
     if (checked_user) {
-      setUser(checked_user);
+      login(checked_user);
       console.log("[LocalLoginPage] user : ", user, checked_user);
       alert(`환영합니다, ${checked_user.name} 님!`);
       navigate("/");

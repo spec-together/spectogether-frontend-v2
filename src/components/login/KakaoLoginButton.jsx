@@ -5,7 +5,7 @@ import { KakaoLogo } from "../icons/KakaoLogo.jsx";
 
 export function KakaoLoginButton() {
   const navigate = useNavigate();
-  const { setUser } = useUser();
+  const { login } = useUser();
 
   const handleKakaoLoginClick = async () => {
     try {
@@ -14,18 +14,20 @@ export function KakaoLoginButton() {
       if (user.status) {
         // 로그인 성공
         console.log("[kakao-login] Found user : ", user.user);
-        setUser({
-          name: user.user.name,
-          nickname: user.user.nickname,
-          user_id: user.user.user_id,
-        });
+        login(user.user);
         navigate("/");
       } else {
         // 로그인 실패
         console.log("[kakao-login] Unregistered user : ", user.user);
         // 회원가입 페이지로 리다이렉트
         navigate("/register/terms", {
-          state: { type: "kakao", user: user.user.email },
+          state: {
+            type: "kakao",
+            user: {
+              oauth_id: user.user.oauth_id,
+              email: user.user.email,
+            },
+          },
         });
       }
     } catch (err) {

@@ -9,7 +9,7 @@ export const handleUserLogin = async (loginID, password) => {
       password: password,
     });
 
-    console.log("response : ", response.data);
+    console.log("로그인 응답 : ", response.data);
     const { access_token, user } = response.data.success;
     const { user_id, name, nickname } = user;
 
@@ -18,6 +18,7 @@ export const handleUserLogin = async (loginID, password) => {
 
     return { user_id, name, nickname };
   } catch (error) {
+    // TODO : 에러오는거 대로 처리하기
     if (error.response && error.response.status === 401) {
       console.error("잘못된 아이디 또는 비밀번호를 입력했습니다.");
       alert("잘못된 아이디 또는 비밀번호를 입력했습니다.");

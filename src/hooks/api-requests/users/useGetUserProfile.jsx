@@ -1,4 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 import stApi from "../../../api/axiosInterceptor";
 import { GET_USER_PROFILE, REISSUE_TOKEN } from "../../../api/config";
 import { setAccessTokenToLocalStorage } from "../../../services/setAccessTokenToLocalStorage";
@@ -6,28 +7,10 @@ import { setAccessTokenToLocalStorage } from "../../../services/setAccessTokenTo
 const getUserProfile = async () => {
   try {
     const response = await stApi.get(GET_USER_PROFILE);
-
     console.log(
       "[getUserProfile] 사용자 프로필을 가지고 옵니다:",
       response.data
     );
-
-    // const {
-    //   name,
-    //   nickname,
-    //   remaining_nickname_changes,
-    //   birthdate,
-    //   phone,
-    //   email,
-    //   is_email_verified,
-    //   school,
-    //   is_school_verified,
-    //   profile_image,
-    //   spec_level,
-    //   manner_score,
-    //   created_at,
-    // } = response.data.success.user;
-
     return response.data.success.user;
   } catch (error) {
     console.error(
@@ -42,13 +25,9 @@ const reissueToken = async () => {
   try {
     console.log("[reissueToken] 토큰 재발급 요청 중...");
     const response = await stApi.get(REISSUE_TOKEN);
-
     const { access_token } = response.data;
     setAccessTokenToLocalStorage(access_token);
-    console.log(`
-      [reissueToken] AT 재발급 완료 ${access_token}
-    `);
-
+    console.log(`[reissueToken] AT 재발급 완료 ${access_token}`);
     return true;
   } catch (error) {
     console.error("AT 재발급 실패 :", error);
@@ -57,11 +36,9 @@ const reissueToken = async () => {
 };
 
 const useGetUserProfile = () => {
-  const {
-    data: userProfile,
-    error,
-    isLoading,
-  } = useQuery({
+  const queryClient = useQueryClient();
+
+  const { data, error, isLoading } = useQuery({
     queryKey: ["userProfile"],
     queryFn: getUserProfile,
     staleTime: 1000 * 60 * 25, // 25분
@@ -75,24 +52,21 @@ const useGetUserProfile = () => {
     },
   });
 
-  const queryClient = useQueryClient();
+  useEffect(() => {
+    const interval = setInterval(
+      async () => {
+        const success = await reissueToken();
+        if (success) {
+          queryClient.invalidateQueries(["userProfile"]);
+        }
+      },
+      1000 * 60 * 25
+    ); // 25분마다 실행
 
-  // AccessToken 재발급 및 주기적 갱신
-  useQuery({
-    queryKey: ["reissueToken"],
-    queryFn: reissueToken,
-    refetchInterval: 1000 * 60 * 25, // 25분마다 실행
-    // enabled: !localStorage.getItem("SPECTOGETHER_AT"),
-    onSuccess: (result) => {
-      console.log(`[useUserProfile] AccessToken 재발급 성공: ${result}`);
-      queryClient.invalidateQueries(["userProfile"]); // 유저 프로필 쿼리 무효화
-    },
-    onError: (error) => {
-      console.error("[useUserProfile] AccessToken 재발급 실패:", error);
-    },
-  });
+    return () => clearInterval(interval);
+  }, [queryClient]);
 
-  return { userProfile, error, isLoading };
+  return { data, error, isLoading };
 };
 
 export default useGetUserProfile;

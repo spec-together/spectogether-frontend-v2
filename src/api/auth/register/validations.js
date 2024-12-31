@@ -1,4 +1,4 @@
-export const validatePhoneNumberFormat = (phoneNumber) => {
+export const phoneNumber = (phoneNumber) => {
   // 한국 전화번호 정규식: 010, 011, 016, 017, 018, 019, 02, 031, 032, 033 등
   const phoneRegex =
     /^(010|011|016|017|018|019|02|031|032|033|034|041|042|043|044|051|052|053|054|055|061|062|063|064|070)-\d{3,4}-\d{4}$/;
@@ -11,7 +11,7 @@ export const validatePhoneNumberFormat = (phoneNumber) => {
   return true;
 };
 
-export const validateEmailFormat = (email) => {
+export const email = (email) => {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   if (!emailRegex.test(email)) {
@@ -22,7 +22,7 @@ export const validateEmailFormat = (email) => {
   return true;
 };
 
-export const validateName = (name) => {
+export const name = (name) => {
   const nameRegex = /^[a-zA-Z가-힣]+$/;
   if (!nameRegex.test(name)) {
     return "이름은 한글 또는 영어만 입력 가능합니다.";
@@ -30,7 +30,7 @@ export const validateName = (name) => {
   return "";
 };
 
-export const validatePassword = (password) => {
+export const password = (password) => {
   // 비밀번호가 영문, 숫자, 특수문자로만 이루어져 있는지 확인
   const regex =
     /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?-]).{8,}$/;
@@ -40,4 +40,11 @@ export const validatePassword = (password) => {
   }
 
   return "";
+};
+
+export default {
+  phoneNumber,
+  email,
+  name,
+  password,
 };
