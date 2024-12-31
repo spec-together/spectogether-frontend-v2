@@ -24,3 +24,4 @@ export const GET_USER_STUDYROOMS = `${BASE_URL}/users/studyrooms`;
 export const GET_USER_TODOS = `${BASE_URL}/users/todos`;
 export const GET_CONTESTS = `${BASE_URL}/events`;
 export const CAROUSEL_AD = `${BASE_URL}/ads/carousel`;
+export const USER_AREA = `${BASE_URL}/users/neighborhoods`;

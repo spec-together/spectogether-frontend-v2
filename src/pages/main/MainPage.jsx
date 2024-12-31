@@ -5,10 +5,11 @@ import { MenuBar } from "../../components/menubar/MenuBar.jsx";
 import { useGetEventWithPagination } from "../../hooks/api-requests/event/useGetEventWithPagination.jsx";
 import { Loading } from "../Loading.jsx";
 import { Footer } from "../../components/header/Footer.jsx";
+import { Notice } from "../../components/main/notice/Notice.jsx";
 
 export const MainPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [limit] = useState(10);
+  const [limit] = useState(12);
   const [totalPages, setTotalPages] = useState(1);
 
   const { data, error, isLoading, isError, isFetching, refetch } =
@@ -36,7 +37,10 @@ export const MainPage = () => {
   return (
     <div>
       <MenuBar />
-      <MainPageCarousel />
+      <div className="flex flex-row justify-center w-full px-24 space-x-24">
+        <MainPageCarousel />
+        <Notice />
+      </div>
       {/* 공모전 정보를 보여주는 카드 섹션 */}
       {isLoading ? (
         <Loading />

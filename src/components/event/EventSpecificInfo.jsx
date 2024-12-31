@@ -6,12 +6,39 @@ export const EventSpecificInfo = ({ contest }) => {
   const renderContent = () => {
     switch (activeTab) {
       case "상세정보":
-        return contest.description;
-      // TODO : 하단 내용들 완성해야 함
+        return (
+          <div>
+            <p>{contest.description}</p>
+            <p>Location: {contest.location}</p>
+            <p>Starts at: {new Date(contest.starts_at).toLocaleString()}</p>
+            <p>Ends at: {new Date(contest.ends_at).toLocaleString()}</p>
+            <p>
+              Application URL:{" "}
+              <a
+                href={contest.application_url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {contest.application_url}
+              </a>
+            </p>
+          </div>
+        );
       case "문의/기대평":
         return "board";
       case "참여신청/취소 안내":
-        return "apply";
+        return (
+          <div>
+            <p>
+              Application Start Date:{" "}
+              {new Date(contest.application_start_date).toLocaleString()}
+            </p>
+            <p>
+              Application End Date:{" "}
+              {new Date(contest.application_end_date).toLocaleString()}
+            </p>
+          </div>
+        );
       default:
         return null;
     }

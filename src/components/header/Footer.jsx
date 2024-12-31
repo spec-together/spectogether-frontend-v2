@@ -1,7 +1,7 @@
 export const Footer = () => {
   return (
     <footer className="w-full font-basic border-t border-[#e5e5e5] py-5 text-center text-sm text-[#666]">
-      <div className="mb-5">여러분의 모든 도전을 응원합니다.</div>
+      <div className="mb-5">여러분의 모든 도전과 함께하겠습니다.</div>
 
       <div className="flex justify-center gap-2.5 mb-4">
         <span>고객센터: 010-9344-8561</span>

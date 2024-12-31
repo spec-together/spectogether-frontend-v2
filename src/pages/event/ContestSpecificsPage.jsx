@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { EventMainInfo } from "../../components/event/EventMainInfo.jsx";
 import { EventSpecificInfo } from "../../components/event/EventSpecificInfo.jsx";
@@ -7,15 +6,13 @@ import { Loading } from "../Loading.jsx";
 
 export const ContestSpecificsPage = () => {
   const { contestId } = useParams();
-  const { contestInfo, loading } = useGetEventInfo(contestId);
+  const { data, isLoading } = useGetEventInfo(contestId);
 
-  useEffect(() => {
-    console.log(
-      `[ContestSpecificsPage] 페이지를 불러왔습니다. contestId: ${contestId}`
-    );
-  }, []);
+  console.log(
+    `[ContestSpecificsPage] 페이지를 불러왔습니다. contestId: ${contestId}`
+  );
 
-  // const contestInfo = {
+  // const data = {
   //   id: 1,
   //   thumbnail: "https://picsum.photos/id/1011/400/400.jpg",
   //   title: "공모전 1",
@@ -32,12 +29,12 @@ export const ContestSpecificsPage = () => {
 
   return (
     <div className="mt-[2.69rem] mx-[7.13rem]">
-      {loading ? (
+      {isLoading ? (
         <Loading />
       ) : (
         <div>
-          <EventMainInfo contest={contestInfo} />
-          <EventSpecificInfo contest={contestInfo} />
+          <EventMainInfo contest={data} />
+          <EventSpecificInfo contest={data} />
         </div>
       )}
     </div>

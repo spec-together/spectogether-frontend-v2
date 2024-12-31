@@ -1,6 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 import { CloseModalButton } from "./CloseModalButton";
 import { handleCreateStudyroom } from "../../api/studyroom/handleCreateStudyroom";
+import { useGetUserArea } from "../../hooks/api-requests/users/useGetUserArea";
+
+/*
+제목 지역
+한줄소개
+목표
+
+관련일정 추가하기
+*/
 
 export const CreateStudyroomModal = ({ isOpen, onClose, autofill }) => {
   const [title, setTitle] = useState("");
@@ -12,6 +21,8 @@ export const CreateStudyroomModal = ({ isOpen, onClose, autofill }) => {
   const [fileName, setFileName] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [autofillEnabled, setAutofillEnabled] = useState(false);
+
+  const { data, error, isLoading } = useGetUserArea();
 
   const dropdownRef = useRef();
 
@@ -44,9 +55,7 @@ export const CreateStudyroomModal = ({ isOpen, onClose, autofill }) => {
   };
 
   const toggleDropdown = () => {
-    if (!autofillEnabled) {
-      setIsDropdownOpen((prev) => !prev);
-    }
+    setIsDropdownOpen((prev) => !prev);
   };
 
   const handleOptionSelect = (option) => {
@@ -97,6 +106,53 @@ export const CreateStudyroomModal = ({ isOpen, onClose, autofill }) => {
               required
             />
           </div>
+          {/* 여기 지역선택 들어가야 함 */}
+          <div className="flex items-center">
+            <label className="w-1/3 text-gray-700">지역 선택</label>
+            <div className="relative w-2/3">
+              <div
+                className="flex items-center justify-between px-4 py-2 border border-blue-300 rounded-lg bg-blue-50"
+                onClick={toggleDropdown}
+              >
+                <span className="text-gray-500">
+                  {areaId || "지역을 선택하세요"}
+                </span>
+                <svg
+                  className={`w-5 h-5 text-gray-500 transform ${
+                    isDropdownOpen ? "rotate-180" : ""
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M19 9l-7 7-7-7"
+                  ></path>
+                </svg>
+              </div>
+              {isDropdownOpen && (
+                <ul
+                  ref={dropdownRef}
+                  className="absolute z-10 w-full mt-1 bg-white border border-blue-300 rounded-lg shadow-lg"
+                >
+                  {["지역1", "지역2", "지역3"].map((option) => (
+                    <li
+                      key={option}
+                      className="px-4 py-2 cursor-pointer hover:bg-blue-100"
+                      onClick={() => handleOptionSelect(option)}
+                    >
+                      {option}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+
           {/* 스터디 한줄소개 */}
           <div className="flex items-center">
             <label className="w-1/3 text-gray-700">한줄 소개</label>
@@ -109,124 +165,12 @@ export const CreateStudyroomModal = ({ isOpen, onClose, autofill }) => {
               required
             />
           </div>
-          {/* 스터디 지역 */}
-          <div className="flex items-center">
-            <label className="w-1/3 text-gray-700">스터디 지역</label>
-            <input
-              type="text"
-              placeholder="스터디 지역"
-              value={areaId}
-              onChange={(e) => setAreaId(e.target.value)}
-              className="w-2/3 px-4 py-2 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-          {/* 스터디룸 프로필 이미지 */}
-          <div className="flex items-center">
-            <label className="w-1/3 text-gray-700">스터디룸 프로필</label>
-            <div className="w-2/3">
-              <div className="relative">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files[0];
-                    if (file) {
-                      setFileName(file.name); // 파일명 저장
-                      const reader = new FileReader();
-                      reader.onloadend = () => {
-                        setProfileImage(reader.result);
-                      };
-                      reader.readAsDataURL(file);
-                    }
-                  }}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                />
-                <div
-                  className={`flex items-center justify-between w-full p-3 border border-blue-300 rounded-lg bg-blue-50 ${
-                    autofillEnabled ? "cursor-not-allowed" : "cursor-pointer"
-                  }`}
-                  onClick={toggleDropdown}
-                >
-                  <span className="text-gray-500">
-                    {fileName || "이미지 파일 선택"}
-                  </span>
-                  <button
-                    type="button"
-                    className={`px-4 py-1 text-sm text-blue-600 bg-white rounded-md shadow-sm ${
-                      autofillEnabled
-                        ? "pointer-events-none opacity-50"
-                        : "hover:bg-blue-100"
-                    }`}
-                    disabled={autofillEnabled}
-                  >
-                    파일 선택
-                  </button>
-                </div>
-              </div>
-              {fileName && (
-                <div className="mt-2 text-sm text-blue-600">
-                  선택된 파일: {fileName}
-                </div>
-              )}
-            </div>
-          </div>
-          {/* 스터디 목적 - 드롭다운 변경 */}
-          <div className="relative flex items-center">
-            <label className="w-1/3 text-gray-700">스터디 유형</label>
-            <div className="w-2/3">
-              <div
-                className={`flex items-center justify-between p-3 border border-blue-300 rounded-lg cursor-pointer bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  autofillEnabled ? "cursor-not-allowed opacity-50" : ""
-                }`}
-                onClick={toggleDropdown}
-              >
-                <span className="text-gray-500">
-                  {targetType || "스터디 목적 선택"}
-                </span>
-                <svg
-                  className={`w-5 h-5 transition-transform ${
-                    isDropdownOpen ? "transform rotate-180" : ""
-                  }`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </div>
-              {isDropdownOpen && !autofillEnabled && (
-                <div className="absolute z-20 w-2/3 mt-1 bg-white border border-blue-300 rounded-lg shadow-lg">
-                  <button
-                    type="button"
-                    onClick={() => handleOptionSelect("공모전")}
-                    className="w-full px-4 py-2 text-left text-gray-700 rounded-t-lg hover:bg-blue-100"
-                  >
-                    공모전
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleOptionSelect("자격증")}
-                    className="w-full px-4 py-2 text-left text-gray-700 rounded-b-lg hover:bg-blue-100"
-                  >
-                    자격증
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
           {/* 목표로 하는 것을 적어주세요 */}
           <div className="flex items-center">
             <label className="w-1/3 text-gray-700">스터디 목표</label>
             <input
               type="text"
-              placeholder="목표로 하는 것을 적어주세요"
+              placeholder="목표를 적어주세요"
               value={targetId}
               onChange={(e) => setTargetId(e.target.value)}
               className="w-2/3 px-4 py-2 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"

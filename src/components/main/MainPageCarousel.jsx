@@ -1,40 +1,27 @@
 import { useState, useEffect } from "react";
+import { useCarousel } from "../../hooks/api-requests/ads/useCarousel";
 
 const MainPageCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const items = [
-    {
-      source_url:
-        "https://static.onoffmix.com/afv2/attach/2024/11/29/v320c741b5fe07cabcc529129109d6a666.jpg",
-    },
-    {
-      source_url:
-        "https://static.onoffmix.com/afv2/attach/2024/12/06/v3cd165194731b8dc7f1c03eaa0c38afbc.jpg",
-    },
-    {
-      source_url:
-        "https://static.onoffmix.com/afv2/attach/2024/12/06/v3d404d135d973a912304f41784ae65b16.jpg",
-    },
-  ];
+  const { data, error, isLoading } = useCarousel();
 
   // 자동 슬라이드 기능
   useEffect(() => {
+    if (isLoading) return;
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % items.length);
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % data.length);
     }, 3000); // 3초마다 슬라이드 변경
     return () => clearInterval(interval);
-  }, [items.length]);
+  }, [data, isLoading]);
 
   // 이전/다음 버튼 클릭 핸들러
   const handlePrev = () => {
-    setCurrentIndex(
-      (prevIndex) => (prevIndex - 1 + items.length) % items.length
-    );
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + data.length) % data.length);
   };
 
   const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % items.length);
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % data.length);
   };
 
   return (
@@ -44,14 +31,15 @@ const MainPageCarousel = () => {
           className="flex h-full transition-transform duration-500"
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
         >
-          {items.map((item, index) => (
-            <img
-              src={item.source_url}
-              alt="carousel-item"
-              className="flex-none object-scale-down w-full p-4 rounded-md"
-              key={index}
-            />
-          ))}
+          {!isLoading &&
+            data.map((item, index) => (
+              <img
+                src={item.link}
+                alt="carousel-item"
+                className="flex-none object-cover w-full h-full"
+                key={index}
+              />
+            ))}
         </div>
 
         {/* 캐러셀 컨트롤 */}
@@ -69,6 +57,19 @@ const MainPageCarousel = () => {
           <span className="text-sm opacity-70">▶</span>
           <span className="sr-only">Next</span>
         </button>
+
+        {/* 캐러셀 인디케이터 */}
+        <div className="absolute flex space-x-2 transform -translate-x-1/2 bottom-2 left-1/2">
+          {!isLoading &&
+            data.map((_, index) => (
+              <div
+                key={index}
+                className={`w-2 h-2 rounded-full ${
+                  index === currentIndex ? "bg-white" : "bg-gray-400"
+                }`}
+              ></div>
+            ))}
+        </div>
       </div>
     </div>
   );
