@@ -31,7 +31,7 @@ const MainPageCarousel = () => {
           <div className="flex items-center justify-center w-full h-full">
             <span>Loading...</span>
           </div>
-        ) : data.length === 0 ? (
+        ) : !data && !data?.length > 0 ? (
           <div className="flex items-center justify-center w-full h-full">
             <span>No data available</span>
           </div>

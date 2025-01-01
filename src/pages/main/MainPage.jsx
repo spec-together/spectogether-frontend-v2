@@ -44,12 +44,12 @@ export const MainPage = () => {
         <Notice />
       </div>
       {/* 공모전 정보를 보여주는 카드 섹션 */}
-      {isLoading ? (
+      {!data && !data?.events && isLoading ? (
         <Loading />
       ) : (
         <>
           <div className="mx-[1.88rem] mt-12 grid grid-cols-4 gap-7 justify-items-center">
-            {data.events &&
+            {data?.events &&
               data.events.map((contest) => (
                 <ContestInfoCard key={contest.event_id} contest={contest} />
               ))}

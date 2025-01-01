@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { CloseModalButton } from "./CloseModalButton";
 import { useGetUserArea } from "../../hooks/api-requests/users/useGetUserArea";
 import useCreateStudyroom from "../../hooks/api-requests/studyroom/useCreateStudyroom";
-import { endOfDay } from "date-fns";
 
 /*
 제목 지역
@@ -46,9 +45,9 @@ export const CreateStudyroomModal = ({ isOpen, onClose, autofill }) => {
 
   useEffect(() => {
     if (autofill) {
-      setGoal(autofill.goal);
-      setGoalUrl(autofill.goal_url);
-      setSchedules(autofill.todos);
+      setGoal(autofill.title);
+      setGoalUrl(autofill.url);
+      setSchedules(autofill?.todos || []);
     }
   }, [autofill]);
 
@@ -115,6 +114,7 @@ export const CreateStudyroomModal = ({ isOpen, onClose, autofill }) => {
         <CloseModalButton onClick={onClose} />
         {/* 제목 지역 (지역은 드롭다운) */}
         <div className="flex flex-row items-center mt-5">
+          {/* 제목 입력하는 부분 */}
           <input
             type="text"
             placeholder="스터디룸 이름을 입력해주세요."
@@ -122,6 +122,7 @@ export const CreateStudyroomModal = ({ isOpen, onClose, autofill }) => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
+          {/* 지역 드롭다운 */}
           <div className="relative w-1/3" ref={dropdownRef}>
             <button
               className="w-full h-10 px-2 ml-2 border border-gray-300 rounded-md"
@@ -130,11 +131,11 @@ export const CreateStudyroomModal = ({ isOpen, onClose, autofill }) => {
               {areaName ? areaName : "지역을 선택해주세요."}
             </button>
             {!isLoading && isDropdownOpen && (
-              <div className="absolute right-0 w-full bg-white border border-gray-300 rounded-md top-10">
+              <div className="absolute w-full px-2 bg-white border border-gray-300 rounded-md left-2 top-11">
                 {data.map((area, idx) => (
                   <button
                     key={idx}
-                    className="w-full h-10 px-2 ml-2 text-left hover:bg-gray-100"
+                    className="w-full h-10 px-2 text-left hover:bg-gray-100"
                     onClick={() => {
                       setAreaId(area.area_id);
                       setAreaName(area.sido + " " + area.gungu);
@@ -167,7 +168,7 @@ export const CreateStudyroomModal = ({ isOpen, onClose, autofill }) => {
 
         {/* 관련일정 표시하기 */}
         <span className="mt-6 text-2xl font-semibold">관련 일정</span>
-        {schedules.length > 0 ? (
+        {schedules && schedules.length > 0 ? (
           <div className="mt-5 space-y-6">
             {schedules.map((schedule, index) => (
               <div

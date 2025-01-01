@@ -36,7 +36,7 @@ export const EventMainInfo = ({ contest }) => {
         label: "진행방식",
         value: contest.is_online ? "온라인" : "오프라인",
       },
-      { label: "주최", value: contest.host_id },
+      { label: "주최", value: contest.organization_name },
     ]);
   }, [contest]);
 
@@ -95,9 +95,9 @@ export const EventMainInfo = ({ contest }) => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         autofill={{
-          targetType: "공모전",
-          targetId: contest.event_id,
-          targetTitle: contest.title,
+          title: contest.title,
+          description: contest.subtitle,
+          url: contest.application_url,
         }}
       />
     </div>

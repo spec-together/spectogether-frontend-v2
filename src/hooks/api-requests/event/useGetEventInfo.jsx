@@ -9,7 +9,7 @@ export const useGetEventInfo = (contestId) => {
     );
     const result = await stApi.get(`${GET_CONTESTS}/${contestId}`);
     console.log(`[useGetContestInfo] result`, result.data.success);
-    return result.data.success.event.event;
+    return result.data.success.event;
   };
   return useQuery({
     queryKey: ["contest", contestId],
