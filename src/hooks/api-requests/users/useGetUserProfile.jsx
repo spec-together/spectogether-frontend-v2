@@ -24,8 +24,8 @@ const getUserProfile = async () => {
 const reissueToken = async () => {
   try {
     console.log("[reissueToken] 토큰 재발급 요청 중...");
-    const response = await stApi.get(REISSUE_TOKEN);
-    const { access_token } = response.data;
+    const response = await stApi.get(REISSUE_TOKEN, { withCredentials: true });
+    const { access_token } = response.data.success;
     setAccessTokenToLocalStorage(access_token);
     console.log(`[reissueToken] AT 재발급 완료 ${access_token}`);
     return true;
@@ -56,12 +56,15 @@ const useGetUserProfile = () => {
     const interval = setInterval(
       async () => {
         const success = await reissueToken();
+        console.log("[useGetUserProfile] AT 재발급 결과:", success);
         if (success) {
           queryClient.invalidateQueries(["userProfile"]);
+          console.log("[useGetUserProfile] AT 재발급 후 유저 정보 다시 가져옴");
         }
       },
-      1000 * 60 * 25
-    ); // 25분마다 실행
+      1000 * 60 * 25 // 25분마다 실행
+      // 1000 * 15 // 15초마다 실행
+    );
 
     return () => clearInterval(interval);
   }, [queryClient]);

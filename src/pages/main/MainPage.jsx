@@ -12,8 +12,10 @@ export const MainPage = () => {
   const [limit] = useState(12);
   const [totalPages, setTotalPages] = useState(1);
 
-  const { data, error, isLoading, isError, isFetching, refetch } =
-    useGetEventWithPagination(currentPage, limit);
+  const { data, error, isLoading } = useGetEventWithPagination(
+    currentPage,
+    limit
+  );
 
   // "pagination": {
   //     "totalItems": 150,

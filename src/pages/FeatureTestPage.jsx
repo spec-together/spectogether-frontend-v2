@@ -3,6 +3,8 @@ import { useUser } from "../contexts/UserContext.jsx";
 import { createChatroom } from "../api/conversations/chat/createChatroom.js";
 import { createMeetroom } from "../api/conversations/meetroom/createMeetroom.js";
 import { LogoutButton } from "../components/login/LogoutButton.jsx";
+import stApi from "../api/axiosInterceptor.js";
+import { BASE_URL } from "../api/config.js";
 
 export const FeatureTestPage = () => {
   const { user } = useUser();
@@ -38,6 +40,13 @@ export const FeatureTestPage = () => {
     alert(
       `Meetroom ID: ${meetroom.meetroom_id}\nUser Meetroom ID: ${meetroom.user_meetroom_id}`
     );
+  };
+
+  const handleGetRefreshToken = async () => {
+    const rt = await stApi.get(`${BASE_URL}/test/rt`, {
+      withCredentials: true,
+    });
+    console.log(rt);
   };
 
   // useEffect(() => {
@@ -89,6 +98,13 @@ export const FeatureTestPage = () => {
               className="w-full px-4 py-2 text-white transition duration-200 bg-purple-600 rounded-lg hover:bg-purple-700"
             >
               Create Meetroom
+            </button>
+
+            <button
+              onClick={handleGetRefreshToken}
+              className="w-full px-4 py-2 text-white transition duration-200 bg-purple-600 rounded-lg hover:bg-purple-700"
+            >
+              RT
             </button>
 
             <Link

@@ -2,8 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import stApi from "../../../api/axiosInterceptor.js";
 import { USER_AREA } from "../../../api/config.js";
 
-export const useGetUserArea = (page = 1, limit = 10) => {
-  const options = (page, limit) => {
+export const useGetUserArea = () => {
+  const options = () => {
     return {
       queryKey: ["userAreas"],
       queryFn: async () => {
@@ -15,7 +15,7 @@ export const useGetUserArea = (page = 1, limit = 10) => {
     };
   };
 
-  return useQuery(options(page, limit));
+  return useQuery(options());
 };
 
 // data: 쿼리의 성공적인 응답 데이터

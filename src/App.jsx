@@ -15,6 +15,7 @@ import { RegisterPage } from "./pages/register/RegisterPage.jsx";
 import { TermsAgreePage } from "./pages/register/TermsAgreePage.jsx";
 import { StudyroomVideocallPage } from "./pages/studyroom/StudyroomVideocallPage.jsx";
 import { MyStudyroomListPage } from "./pages/mypage/MyStudyroomListPage.jsx";
+import { ResetPasswordPage } from "./pages/findpw/ResetPasswordPage.jsx";
 
 // QueryClient 생성
 const queryClient = new QueryClient();
@@ -28,12 +29,20 @@ function App() {
             {/* 404 */}
             <Route path="*" element={<NotFoundPage />} />
 
-            {/* 로그인, 회원가입 페이지 */}
+            {/* 로그인, 비밀번호 찾기, 회원가입 페이지 */}
             <Route
               path="/login"
               element={
                 <SearchHeaderLayoutPage>
                   <LoginPage />
+                </SearchHeaderLayoutPage>
+              }
+            />
+            <Route
+              path="/find/pw"
+              element={
+                <SearchHeaderLayoutPage>
+                  <ResetPasswordPage />
                 </SearchHeaderLayoutPage>
               }
             />

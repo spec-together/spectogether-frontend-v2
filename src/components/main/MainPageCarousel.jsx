@@ -27,49 +27,59 @@ const MainPageCarousel = () => {
   return (
     <div className="flex justify-center">
       <div className="relative mb-6 mt-6 overflow-hidden rounded-lg shadow-lg w-[940px] h-[380px] group">
-        <div
-          className="flex h-full transition-transform duration-500"
-          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-        >
-          {!isLoading &&
-            data.map((item, index) => (
-              <img
-                src={item.link}
-                alt="carousel-item"
-                className="flex-none object-cover w-full h-full"
-                key={index}
-              />
-            ))}
-        </div>
+        {isLoading ? (
+          <div className="flex items-center justify-center w-full h-full">
+            <span>Loading...</span>
+          </div>
+        ) : data.length === 0 ? (
+          <div className="flex items-center justify-center w-full h-full">
+            <span>No data available</span>
+          </div>
+        ) : (
+          <>
+            <div
+              className="flex h-full transition-transform duration-500"
+              style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+            >
+              {data.map((item, index) => (
+                <img
+                  src={item.link}
+                  alt="carousel-item"
+                  className="flex-none object-cover w-full h-full"
+                  key={index}
+                />
+              ))}
+            </div>
 
-        {/* 캐러셀 컨트롤 */}
-        <button
-          onClick={handlePrev}
-          className="absolute p-1 text-white transition-opacity transform -translate-y-1/2 bg-gray-800 bg-opacity-50 rounded-full opacity-0 left-1 top-1/2 group-hover:opacity-100"
-        >
-          <span className="text-sm opacity-70">◀</span>
-          <span className="sr-only">Previous</span>
-        </button>
-        <button
-          onClick={handleNext}
-          className="absolute p-1 text-white transition-opacity transform -translate-y-1/2 bg-gray-800 bg-opacity-50 rounded-full opacity-0 right-1 top-1/2 group-hover:opacity-100"
-        >
-          <span className="text-sm opacity-70">▶</span>
-          <span className="sr-only">Next</span>
-        </button>
+            {/* 캐러셀 컨트롤 */}
+            <button
+              onClick={handlePrev}
+              className="absolute p-1 text-white transition-opacity transform -translate-y-1/2 bg-gray-800 bg-opacity-50 rounded-full opacity-0 left-1 top-1/2 group-hover:opacity-100"
+            >
+              <span className="text-sm opacity-70">◀</span>
+              <span className="sr-only">Previous</span>
+            </button>
+            <button
+              onClick={handleNext}
+              className="absolute p-1 text-white transition-opacity transform -translate-y-1/2 bg-gray-800 bg-opacity-50 rounded-full opacity-0 right-1 top-1/2 group-hover:opacity-100"
+            >
+              <span className="text-sm opacity-70">▶</span>
+              <span className="sr-only">Next</span>
+            </button>
 
-        {/* 캐러셀 인디케이터 */}
-        <div className="absolute flex space-x-2 transform -translate-x-1/2 bottom-2 left-1/2">
-          {!isLoading &&
-            data.map((_, index) => (
-              <div
-                key={index}
-                className={`w-2 h-2 rounded-full ${
-                  index === currentIndex ? "bg-white" : "bg-gray-400"
-                }`}
-              ></div>
-            ))}
-        </div>
+            {/* 캐러셀 인디케이터 */}
+            <div className="absolute flex space-x-2 transform -translate-x-1/2 bottom-2 left-1/2">
+              {data.map((_, index) => (
+                <div
+                  key={index}
+                  className={`w-2 h-2 rounded-full ${
+                    index === currentIndex ? "bg-white" : "bg-gray-400"
+                  }`}
+                ></div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

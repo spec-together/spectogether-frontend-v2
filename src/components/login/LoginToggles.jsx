@@ -1,7 +1,6 @@
 // 이게 쓰는거임
 
 import { useNavigate } from "react-router-dom";
-import { VerticalLine } from "../VerticalLine";
 
 export const LoginToggles = () => {
   const navigate = useNavigate();
@@ -12,7 +11,9 @@ export const LoginToggles = () => {
           type="button"
           className="hover:underline"
           onClick={() => {
-            navigate("/find/id");
+            alert(
+              "스펙투게더는 전화번호를 아이디로 활용하고 있습니다.\n전화번호로 로그인 해 주세요."
+            );
           }}
         >
           아이디 찾기
