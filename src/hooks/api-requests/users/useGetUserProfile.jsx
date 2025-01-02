@@ -63,10 +63,13 @@ const useGetUserProfile = () => {
         }
       },
       1000 * 60 * 25 // 25분마다 실행
-      // 1000 * 15 // 15초마다 실행
+      // 1000 * 5 // 15초마다 실행
     );
 
-    return () => clearInterval(interval);
+    return () => {
+      console.log("[useGetUserProfile] AT 재발급 interval 해제");
+      clearInterval(interval);
+    };
   }, [queryClient]);
 
   return { data, error, isLoading };

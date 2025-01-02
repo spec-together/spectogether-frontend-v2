@@ -1,6 +1,6 @@
 export const Loading = () => {
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-100/90">
+    <div className="fixed inset-0 flex items-center justify-center bg-white">
       <div className="flex flex-col items-center gap-4">
         <div className="w-16 h-16 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
         <p className="text-xl font-semibold text-gray-700">

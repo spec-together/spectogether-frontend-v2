@@ -29,3 +29,4 @@ export const PHONE_CHECK_UNIQUE = `${BASE_URL}/verification/phone/unique`;
 export const PHONE_SEND_CODE = `${BASE_URL}/verification/phone/send`;
 export const PHONE_VERIFY_CODE = `${BASE_URL}/verification/phone/verify`;
 export const CREATE_STUDYROOM = `${BASE_URL}/studyrooms`;
+export const GET_STUDYROOM_INFO = `${BASE_URL}/studyrooms`;
