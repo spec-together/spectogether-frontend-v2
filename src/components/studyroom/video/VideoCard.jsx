@@ -8,6 +8,11 @@ export const Video = ({ stream }) => {
   }, [stream]);
 
   return (
-    <video ref={ref} autoPlay playsInline width="400" height="300"></video>
+    <video
+      ref={ref}
+      autoPlay
+      playsInline
+      className="w-full h-full rounded-lg"
+    ></video>
   );
 };

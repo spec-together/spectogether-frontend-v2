@@ -4,9 +4,10 @@ import { SOCKET_URL_VIDEO } from "../../api/config.js";
 import { Loading } from "../Loading.jsx";
 import { useParams } from "react-router-dom";
 import { Video } from "../../components/studyroom/video/VideoCard.jsx";
+import { MuteIcon } from "../../components/icons/MuteIcon.jsx";
 
 export const StudyroomVideocallPage = () => {
-  const [muted, setMuted] = useState(false);
+  const [muted, setMuted] = useState(true);
   const [cameraOff, setCameraOff] = useState(false);
   const [cameras, setCameras] = useState([]);
   // const [roomName, setRoomName] = useState("");
@@ -31,7 +32,6 @@ export const StudyroomVideocallPage = () => {
     if (!isCalling) {
       return;
     }
-    console.log("이거 실행됬어요 ~");
     socketRef.current = io(SOCKET_URL_VIDEO);
     // 이 방에 있는 모든 사용자의 socket.id를 리턴받고,
     // 각각의 socket.id에 대해 peer connection을 생성
@@ -106,13 +106,13 @@ export const StudyroomVideocallPage = () => {
 
     pc.onicecandidate = (event) => {
       if (event.candidate) {
-        console.log(`[onicecandidate] event`, event);
+        console.log(`[onicecandidate] event`);
         socketRef.current.emit("ice-candidate", socketId, event.candidate);
       }
     };
 
     pc.ontrack = (event) => {
-      console.log(`[ontrack] event`, event);
+      console.log(`[ontrack] event`);
       setUsers((prevUsers) => {
         // 이미 해당 사용자가 존재하는 경우에는 추가하지 않음
         if (!prevUsers.some((socket) => socket.id === socketId)) {
@@ -123,7 +123,7 @@ export const StudyroomVideocallPage = () => {
     };
 
     myStream.current.getTracks().forEach((track) => {
-      console.log(`[createPeerConnection] myStream getTracks`, track);
+      console.log(`[createPeerConnection] myStream getTracks`);
       pc.addTrack(track, myStream.current);
     });
 
@@ -138,11 +138,11 @@ export const StudyroomVideocallPage = () => {
 
   const getMedia = async (deviceId) => {
     const initialConstraints = {
-      audio: true,
+      audio: false,
       video: { facingMode: "user" },
     };
     const cameraConstraints = {
-      audio: true,
+      audio: false,
       video: { deviceId: { exact: deviceId } },
     };
     try {
@@ -165,6 +165,7 @@ export const StudyroomVideocallPage = () => {
       const videoCameras = devices.filter(
         (device) => device.kind === "videoinput"
       );
+      console.log(`[getCameras] videoCameras`, videoCameras);
       setCameras(videoCameras);
     } catch (e) {
       console.error(e);
@@ -186,6 +187,7 @@ export const StudyroomVideocallPage = () => {
   };
 
   const handleCameraChange = async () => {
+    console.log(`[handleCameraChange]`, camerasSelectRef.current.value);
     await getMedia(camerasSelectRef.current.value);
     Object.values(myPeerConnections.current).forEach((pc) => {
       const videoTrack = myStream.current.getVideoTracks()[0];
@@ -214,87 +216,83 @@ export const StudyroomVideocallPage = () => {
   }, [isCalling]);
 
   return (
-    <div className="min-h-screen p-4 bg-gray-100">
-      <div className="flex justify-center mb-4">
-        {isCalling ? (
-          <button
-            onClick={() => {
-              // 진짜 골 떄리네 이거 ㅋㅋ
-              // 통화에서 나갈 땐 users도 초기화해주어야 함!
-              setIsCalling(false);
-              setInCall(false);
-              setUsers([]);
-              socketRef.current.disconnect();
-            }}
-            className="px-4 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600"
-          >
-            End Call
-          </button>
-        ) : (
-          <button
-            onClick={() => setIsCalling(true)}
-            className="px-4 py-2 text-white bg-green-500 rounded-lg hover:bg-green-600"
-          >
-            Start Call
-          </button>
-        )}
-      </div>
+    <div className="min-h-screen p-4">
+      <div className="flex justify-center mb-4"></div>
       {!inCall ? (
         // <Loading />
-        <div>waiting...</div>
+        <div>시작하기 버튼을 눌러 영상통화를 시작하세요!</div>
       ) : (
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <div className="p-4 bg-white rounded-lg shadow-lg">
-              <video
-                id="myFace"
-                ref={myFaceRef}
-                autoPlay
-                playsInline
-                className="w-full mb-4 rounded-lg"
-              ></video>
-              <div className="flex flex-wrap gap-2">
-                <button
-                  onClick={handleMuteClick}
-                  className={`px-4 py-2 rounded-lg ${
-                    muted ? "bg-red-500" : "bg-green-500"
-                  } text-white hover:opacity-90`}
-                >
-                  {muted ? "Unmute" : "Mute"}
-                </button>
-                <button
-                  onClick={handleCameraClick}
-                  className={`px-4 py-2 rounded-lg ${
-                    cameraOff ? "bg-red-500" : "bg-green-500"
-                  } text-white hover:opacity-90`}
-                >
-                  {cameraOff ? "Turn Camera On" : "Turn Camera Off"}
-                </button>
-                <select
-                  ref={camerasSelectRef}
-                  onChange={handleCameraChange}
-                  className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  {cameras.map((camera) => (
-                    <option key={camera.deviceId} value={camera.deviceId}>
-                      {camera.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {users.map((user) => (
-                <div
-                  key={user.id}
-                  className="p-4 bg-white rounded-lg shadow-lg"
-                >
-                  <Video stream={user.stream} />
-                </div>
-              ))}
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-2">
+            <video
+              id="myFace"
+              ref={myFaceRef}
+              autoPlay
+              playsInline
+              className="w-full h-full rounded-lg"
+            ></video>
+            {users.map((user, idx) => (
+              <Video key={idx} stream={user.stream} />
+            ))}
+          </div>
+        </div>
+      )}
+      {isCalling ? (
+        <div>
+          {/* 버튼 그룹 */}
+
+          <div className="p-4 bg-white rounded-lg">
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={handleMuteClick}
+                className={`px-4 py-2 rounded-lg ${
+                  muted ? "bg-red-500" : "bg-green-500"
+                } text-white hover:opacity-90`}
+              >
+                <MuteIcon state={muted} />
+              </button>
+              <button
+                onClick={handleCameraClick}
+                className={`px-4 py-2 rounded-lg ${
+                  cameraOff ? "bg-red-500" : "bg-green-500"
+                } text-white hover:opacity-90`}
+              >
+                {cameraOff ? "Turn Camera On" : "Turn Camera Off"}
+              </button>
+              <select
+                ref={camerasSelectRef}
+                onChange={handleCameraChange}
+                className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {cameras.map((camera) => (
+                  <option key={camera.deviceId} value={camera.deviceId}>
+                    {camera.label}
+                  </option>
+                ))}
+              </select>
+              <button
+                onClick={() => {
+                  // 진짜 골 떄리네 이거 ㅋㅋ
+                  // 통화에서 나갈 땐 users도 초기화해주어야 함!
+                  setIsCalling(false);
+                  setInCall(false);
+                  setUsers([]);
+                  socketRef.current.disconnect();
+                }}
+                className="px-4 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600"
+              >
+                End Call
+              </button>
             </div>
           </div>
         </div>
+      ) : (
+        <button
+          onClick={() => setIsCalling(true)}
+          className="px-4 py-2 text-white bg-green-500 rounded-lg hover:bg-green-600"
+        >
+          Start Call
+        </button>
       )}
     </div>
   );
