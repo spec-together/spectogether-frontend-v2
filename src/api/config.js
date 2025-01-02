@@ -1,4 +1,4 @@
-export const BASE_URL = "https://api.st.skyofseoul.synology.me";
+export const BASE_URL = "http://skyofseoul.synology.me:44044";
 export const USER_LOGIN = `${BASE_URL}/auth/login/local`;
 export const USER_LOGOUT = `${BASE_URL}/auth/logout`;
 export const USER_REGISTER = `${BASE_URL}/auth/register`;

@@ -6,13 +6,17 @@ export const handleKakaoLogin = () => {
     window.open(KAKAO_LOGIN, "resizable=no,location=no,scrollbars=yes");
 
     const messageHandler = (event) => {
-      const allowedOrigins = [BASE_URL, "http://localhost:5173"];
+      const allowedOrigins = [
+        BASE_URL,
+        "http://localhost:5173",
+        "https://api.st.skyofseoul.synology.me",
+      ];
+      console.log("[handleKakaoLogin] event.data:", event.data);
+      console.log("[handleKakaoLogin] event.origin:", event.origin);
       if (allowedOrigins.includes(event.origin) === false) {
         console.error("[handleKakaoLogin] Invalid origin: ", event.origin);
         return; // 서버 주소 확인
       }
-      console.log("[handleKakaoLogin] event.data:", event.data);
-      console.log("[handleKakaoLogin] event.origin:", event.origin);
 
       if (event.data?.is_registered === true) {
         console.log("[handleKakaoLogin] 카카오 로그인 성공", event.data);

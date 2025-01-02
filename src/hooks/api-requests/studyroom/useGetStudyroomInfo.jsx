@@ -9,7 +9,7 @@ const useGetStudyroomInfo = (id) => {
       const response = await stApi.get(`${GET_STUDYROOM_INFO}/${id}`);
       console.log(
         "[useGetStudyroomInfo] 스터디룸 정보를 가져왔습니다:",
-        response.data
+        response.data.success
       );
       return response.data.success;
     },

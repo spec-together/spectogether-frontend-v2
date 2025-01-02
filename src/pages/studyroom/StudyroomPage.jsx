@@ -14,13 +14,14 @@ export const StudyroomPage = () => {
     return <div>Studyroom ID가 없습니다. 올바른 URL을 입력해주세요.</div>;
   }
   if (isLoading) return <Loading />;
+  console.log(`[StudyroomPage] data`, data);
 
   return (
     <div className="flex flex-row w-full h-full mt-12">
       <div className="flex flex-col w-3/5 h-full overflow-y-auto">
         <StudyroomInfo studyroom={data} />
         {/* 하단 캘린더 */}
-        <CalendarForStudyroom />
+        <CalendarForStudyroom todos={data.studyroom_todos} />
       </div>
       <div className="w-px mx-8 bg-[#7b7b7b]"></div>
       <ChatroomForStudyroom />
