@@ -5,6 +5,8 @@ import { Loading } from "../Loading.jsx";
 import { useParams } from "react-router-dom";
 import { Video } from "../../components/studyroom/video/VideoCard.jsx";
 import { MuteIcon } from "../../components/icons/MuteIcon.jsx";
+import { CameraIcon } from "../../components/icons/CameraIcon.jsx";
+import { CallStatusIcon } from "../../components/icons/CallStatusIcon.jsx";
 
 export const StudyroomVideocallPage = () => {
   const [muted, setMuted] = useState(true);
@@ -257,7 +259,7 @@ export const StudyroomVideocallPage = () => {
                   cameraOff ? "bg-red-500" : "bg-green-500"
                 } text-white hover:opacity-90`}
               >
-                {cameraOff ? "Turn Camera On" : "Turn Camera Off"}
+                <CameraIcon state={!cameraOff} />
               </button>
               <select
                 ref={camerasSelectRef}
@@ -281,7 +283,7 @@ export const StudyroomVideocallPage = () => {
                 }}
                 className="px-4 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600"
               >
-                End Call
+                <CallStatusIcon state={false} />
               </button>
             </div>
           </div>
@@ -291,7 +293,7 @@ export const StudyroomVideocallPage = () => {
           onClick={() => setIsCalling(true)}
           className="px-4 py-2 text-white bg-green-500 rounded-lg hover:bg-green-600"
         >
-          Start Call
+          <CallStatusIcon state={true} />
         </button>
       )}
     </div>
