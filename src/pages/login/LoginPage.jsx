@@ -7,6 +7,7 @@ import { useUser } from "../../contexts/UserContext.jsx";
 import { useNavigate } from "react-router-dom";
 import { ShowAndHideIcon } from "../../components/icons/ShowAndHideIcon.jsx";
 import useFormatPassword from "../../hooks/formats/useFormatPassword.jsx";
+import { setAccessTokenToLocalStorage } from "../../services/setAccessTokenToLocalStorage.js";
 
 export const LoginPage = () => {
   const [loginId, setLoginId] = useState("");
@@ -30,6 +31,7 @@ export const LoginPage = () => {
         onSuccess: (data) => {
           console.log("[LoginPage] data : ", data);
           login(data.user);
+          setAccessTokenToLocalStorage(data.access_token);
           alert(`환영합니다, ${data.user.name} 님!`);
           navigate("/");
         },

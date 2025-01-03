@@ -16,6 +16,7 @@ import { TermsAgreePage } from "./pages/register/TermsAgreePage.jsx";
 import { StudyroomVideocallPage } from "./pages/studyroom/StudyroomVideocallPage.jsx";
 import { MyStudyroomListPage } from "./pages/mypage/MyStudyroomListPage.jsx";
 import { ResetPasswordPage } from "./pages/findpw/ResetPasswordPage.jsx";
+import { NoticePage } from "./pages/main/NoticePage.jsx";
 
 // QueryClient 생성
 const queryClient = new QueryClient();
@@ -79,6 +80,16 @@ function App() {
               element={
                 <SearchHeaderLayoutPage>
                   <MainPage />
+                </SearchHeaderLayoutPage>
+              }
+            />
+
+            {/* 공지사항 */}
+            <Route
+              path="/notice"
+              element={
+                <SearchHeaderLayoutPage>
+                  <NoticePage />
                 </SearchHeaderLayoutPage>
               }
             />

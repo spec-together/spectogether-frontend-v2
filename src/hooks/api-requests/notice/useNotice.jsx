@@ -1,15 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import stApi from "../../../api/axiosInterceptor.js";
-import { GET_CONTESTS } from "../../../api/config.js";
+import { NOTICES } from "../../../api/config.js";
 
-export const useNotice = (page = 1, limit = 10) => {
-  const options = (page, limit) => {
+export const useNotice = () => {
+  const options = () => {
     return {
-      queryKey: ["contests", page, limit],
+      queryKey: ["contests"],
       queryFn: async () => {
-        const response = await stApi.get(
-          `${GET_CONTESTS}?page=${page}&limit=${limit}`
-        );
+        const response = await stApi.get(NOTICES);
         console.log(response.data.success);
         return response.data.success;
       },
@@ -17,7 +15,7 @@ export const useNotice = (page = 1, limit = 10) => {
     };
   };
 
-  return useQuery(options(page, limit));
+  return useQuery(options());
 };
 
 // data: 쿼리의 성공적인 응답 데이터

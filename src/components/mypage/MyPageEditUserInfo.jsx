@@ -2,30 +2,80 @@ import useGetUserProfile from "../../hooks/api-requests/users/useGetUserProfile.
 import { Loading } from "../../pages/Loading";
 
 export const MyPageEditUserInfo = () => {
-  const { userProfile, loading } = useGetUserProfile();
+  const { data, isLoading } = useGetUserProfile();
+
+  console.log(data, isLoading);
+
+  /*
+
+  UserProfile: {
+  "user_id": "Oj9gwCE4XALhb3cAA2cVQNeiBVrgOxQgO7GTDpTwC8c",
+  "name": "박경운",
+  "nickname": "RRGQ",
+  "remaining_nickname_changes": 2,
+  "birthdate": "2001-12-09",
+  "phone": "01093448560",
+  "email": "skycloud@kakao.com",
+  "is_email_verified": false,
+  "profile_image": "https://picsum.photos/200",
+  "spec_level": 1,
+  "manner_score": 5000,
+  "created_at": "2024-12-31T09:24:09.283Z",
+  "areas": [
+    {
+      "area_id": 1,
+      "sequence": 1,
+      "sido": "서울특별시",
+      "gungu": "마포구"
+    },
+    {
+      "area_id": 2,
+      "sequence": 1,
+      "sido": "서울특별시",
+      "gungu": "양천구"
+    },
+    {
+      "area_id": 3,
+      "sequence": 1,
+      "sido": "서울특별시",
+      "gungu": "서대문구"
+    }
+  ],
+  "specs": []
+}) User: {}
+
+*/
 
   return (
     <div>
-      {loading ? (
+      {isLoading ? (
         <Loading />
       ) : (
         <div className="flex flex-row">
           {/* 프로필 이미지 + Lv, 닉네임 */}
           <div className="flex flex-row items-center">
             <img
-              src={userProfile.profile_image}
+              src={data.profile_image}
               alt="profile_image"
               className="w-[10.39rem] h-[10.39rem] rounded-full object-cover"
             />
             <div className="flex flex-col ml-6">
               <span className="text-[#6F6F6F] font-pretendard text-sm font-normal mb-3">
-                Lv. {userProfile.spec_level}
+                Lv. {data.spec_level}
               </span>
               <span className="text-black font-pretendard text-[2.625rem] font-extrabold">
-                {userProfile.nickname}
+                {data.nickname}
               </span>
+              닉네임 변경 가능 횟수 : {data.remaining_nickname_changes}
             </div>
           </div>
+
+          {data.specs &&
+            data.specs.map((spec, index) => (
+              <div key={index}>
+                <div>{spec.title}</div>
+              </div>
+            ))}
 
           {/* 경력사항 -- TODO: 더보기 생겨야 하고 개수제한 적용해야 함*/}
           <div className="ml-28">
@@ -34,8 +84,8 @@ export const MyPageEditUserInfo = () => {
             </div>
 
             <div className="flex flex-col space-y-2 w-[27rem]">
-              {userProfile?.specs
-                ? userProfile.specs.map((spec, index) => (
+              {data?.specs
+                ? data.specs.map((spec, index) => (
                     <div
                       key={index}
                       className="flex flex-row items-center w-full"
