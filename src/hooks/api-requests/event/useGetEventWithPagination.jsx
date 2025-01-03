@@ -1,32 +1,28 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import stApi from "../../../api/axiosInterceptor.js";
 import { GET_CONTESTS } from "../../../api/config.js";
 
-export const useGetEventWithPagination = (page, limit) => {
-  const [contestList, setContestList] = useState([]);
-  const [pagination, setPagination] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchContestList = async () => {
-      try {
-        setLoading(true);
+export const useGetEventWithPagination = (page = 1, limit = 10) => {
+  const options = (page, limit) => {
+    return {
+      queryKey: ["contests", page, limit],
+      queryFn: async () => {
         const response = await stApi.get(
-          `${GET_CONTESTS}?page=${page || 1}&limit=${limit || 10}`
+          `${GET_CONTESTS}?page=${page}&limit=${limit}`
         );
-        console.log("Contest Response:", response.data);
-        setContestList(response.data.success.contests);
-        setPagination(response.data.success.pagination);
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
+        console.log(response.data.success);
+        return response.data.success;
+      },
+      keepPreviousData: true,
     };
+  };
 
-    fetchContestList();
-  }, [page, limit]);
-
-  return { contestList, pagination, loading, error };
+  return useQuery(options(page, limit));
 };
+
+// data: 쿼리의 성공적인 응답 데이터
+// error: 쿼리의 에러 정보
+// isLoading: 쿼리가 로딩 중인지 여부
+// isError: 쿼리가 에러 상태인지 여부
+// isFetching: 쿼리가 백그라운드에서 데이터를 다시 가져오는 중인지 여부
+// refetch: 쿼리를 다시 실행하는 함수

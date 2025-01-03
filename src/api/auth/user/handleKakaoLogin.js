@@ -6,46 +6,35 @@ export const handleKakaoLogin = () => {
     window.open(KAKAO_LOGIN, "resizable=no,location=no,scrollbars=yes");
 
     const messageHandler = (event) => {
-      const allowedOrigins = [BASE_URL, "http://localhost:5173"];
+      const allowedOrigins = [
+        BASE_URL,
+        "http://localhost:5173",
+        "https://api.st.skyofseoul.synology.me",
+      ];
+      console.log("[handleKakaoLogin] event.data:", event.data);
+      console.log("[handleKakaoLogin] event.origin:", event.origin);
       if (allowedOrigins.includes(event.origin) === false) {
         console.error("[handleKakaoLogin] Invalid origin: ", event.origin);
         return; // 서버 주소 확인
       }
-      console.log("[handleKakaoLogin] event.data:", event.data);
-      console.log("[handleKakaoLogin] event.origin:", event.origin);
 
-      // 사용자가 등록되지 않은 경우
-      if ("not_registered_user" in event.data) {
-        const { email } = event.data.not_registered_user;
+      if (event.data?.is_registered === true) {
+        console.log("[handleKakaoLogin] 카카오 로그인 성공", event.data);
+        setAccessTokenToLocalStorage(event.data.access_token);
+        resolve({ status: true, user: JSON.parse(event.data.user_info) });
+      } else if (event.data?.is_registered === false) {
         console.log(
-          "[handleKakaoLogin] User not found, please redirect to register page"
+          "[handleKakaoLogin] 사용자가 등록되지 않았습니다.",
+          event.data.not_registered_user
         );
-        resolve({ status: false, user: { email } }); // Promise 해결
-        // setTimeout(() => {
-        //   window.location.reload();
-        //   console.log(
-        //     "[handleKakaoLogin] 창이 닫히고, 새로고침을 예약했습니다."
-        //   );
-        // }, 500);
-      } else {
-        const { user_id, name, nickname, token } = event.data;
-        console.log(
-          "[handleKakaoLogin] User found:",
-          user_id,
-          name,
-          nickname,
-          token
-        );
-        setAccessTokenToLocalStorage(token);
-        resolve({ status: true, user: { user_id, name, nickname } }); // Promise 해결
-        // setTimeout(() => {
-        //   window.location.reload();
-        //   console.log(
-        //     "[handleKakaoLogin] 창이 닫히고, 새로고침을 예약했습니다."
-        //   );
-        // }, 500);
+        resolve({
+          status: false,
+          user: {
+            oauth_id: event.data.id,
+            email: event.data.email,
+          },
+        });
       }
-
       // 이벤트 리스너 제거 (한 번만 처리)
       window.removeEventListener("message", messageHandler);
     };

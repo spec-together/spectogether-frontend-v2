@@ -7,11 +7,11 @@ import { useNavigate } from "react-router-dom";
 import { handleUserLogout } from "../../api/auth/user/handleUserLogout";
 import { useUser } from "../../contexts/UserContext";
 
-export const LoggedInUserAndIcons = ({ user }) => {
+export const LoggedInUserAndIcons = () => {
   const [isMessageBoxVisible, setIsMessageBoxVisible] = useState(false);
   const navigate = useNavigate();
   const messageBoxRef = useRef(null);
-  const { setUser } = useUser();
+  const { user, logout } = useUser();
 
   const handleUserIconClick = () => {
     setIsMessageBoxVisible((prev) => !prev);
@@ -31,7 +31,8 @@ export const LoggedInUserAndIcons = ({ user }) => {
       const result = await handleUserLogout();
       if (result) {
         localStorage.removeItem("SPECTOGETHER_AT");
-        setUser({});
+        // setUser({});
+        logout();
         alert("로그아웃 되었습니다.");
         navigate("/login");
       }
@@ -61,6 +62,8 @@ export const LoggedInUserAndIcons = ({ user }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isMessageBoxVisible]);
+
+  useEffect(() => {}, [user]);
 
   return (
     <div className="mr-[1.53rem] flex flex-row items-center relative">

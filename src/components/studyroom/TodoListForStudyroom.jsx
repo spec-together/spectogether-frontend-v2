@@ -2,7 +2,8 @@ import { DubogiButton } from "../DubogiButton";
 import { TodoCheckBox } from "../icons/TodoCheckBox";
 import { VerticalLine } from "../VerticalLine";
 
-export const TodoListForStudyroom = () => {
+// DEPRECATED
+export const TodoListForStudyroom = ({ studyroom_todos }) => {
   const todos = [
     {
       id: 1,

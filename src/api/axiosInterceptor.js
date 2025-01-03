@@ -29,11 +29,17 @@ stApi.interceptors.request.use(
 stApi.interceptors.response.use(
   (response) => {
     // Any status code that lie within the range of 2xx cause this function to trigger
-    console.log("[axios intercepter] response : ", response);
+    console.log("[axios intercepter] 성공 : ", response.data);
 
     return response;
   },
   (error) => {
+    // console.log(`[axios intercepter] 실패 : ${error.response.data}`);
+    console.log(
+      "[axios intercepter] 실패 :",
+      error.response.data?.error || error.response.data
+    );
+
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // if (error.response && error.response.status === 401) {
     //   // Handle unauthorized access

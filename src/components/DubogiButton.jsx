@@ -1,6 +1,6 @@
-export const DubogiButton = ({ children, onClick }) => {
+export const DubogiButton = ({ onClick }) => {
   return (
-    <div className="flex flex-row items-center h-4">
+    <div className="flex flex-row items-center h-4" onClick={onClick}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 13 14"
@@ -14,7 +14,9 @@ export const DubogiButton = ({ children, onClick }) => {
           strokeLinejoin="round"
         />
       </svg>
-      <span className="ml-1 text-sm font-pretendard">더보기</span>
+      <span className="ml-1 text-sm cursor-pointer font-pretendard">
+        더보기
+      </span>
     </div>
   );
 };

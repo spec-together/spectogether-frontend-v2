@@ -1,70 +1,78 @@
-import { useState, useEffect } from "react";
-import { getUserProfile } from "../../../api/auth/user/getUserProfile.js";
-import { reissueToken } from "../../../api/auth/user/reissueToken.js";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
+import stApi from "../../../api/axiosInterceptor";
+import { GET_USER_PROFILE, REISSUE_TOKEN } from "../../../api/config";
+import { setAccessTokenToLocalStorage } from "../../../services/setAccessTokenToLocalStorage";
+
+const getUserProfile = async () => {
+  try {
+    const response = await stApi.get(GET_USER_PROFILE);
+    console.log(
+      "[getUserProfile] 사용자 프로필을 가지고 옵니다:",
+      response.data
+    );
+    return response.data.success.user;
+  } catch (error) {
+    console.error(
+      "[getUserProfile] 사용자 프로필을 가져오는데 실패했습니다:",
+      error
+    );
+    return null;
+  }
+};
+
+const reissueToken = async () => {
+  try {
+    console.log("[reissueToken] 토큰 재발급 요청 중...");
+    const response = await stApi.get(REISSUE_TOKEN, { withCredentials: true });
+    const { access_token } = response.data.success;
+    setAccessTokenToLocalStorage(access_token);
+    console.log(`[reissueToken] AT 재발급 완료 ${access_token}`);
+    return true;
+  } catch (error) {
+    console.error("AT 재발급 실패 :", error);
+    return false;
+  }
+};
 
 const useGetUserProfile = () => {
-  const [userProfile, setUserProfile] = useState(null);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true); // 로딩 상태 추가
+  const queryClient = useQueryClient();
+
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["userProfile"],
+    queryFn: getUserProfile,
+    staleTime: 1000 * 60 * 25, // 25분
+    onSuccess: (data) => {
+      console.log(
+        `[useUserProfile] 유저 정보를 가져왔습니다.\nUserProfile: ${JSON.stringify(data, null, 2)}`
+      );
+    },
+    onError: (error) => {
+      console.error("[useUserProfile] 유저 정보 가져오기 실패:", error);
+    },
+  });
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        setLoading(true); // 데이터 fetching 시작 시 로딩 상태 활성화
-        const profile = await getUserProfile();
-        setUserProfile(profile);
-        console.log(
-          `[useUserProfile] 유저 정보를 가져왔습니다.\n(비동기 처리 후) UserProfile : ${JSON.stringify(profile, null, 2)}`
-        );
-
-        if (!localStorage.getItem("SPECTOGETHER_AT")) {
-          console.log(`[useUserProfile] AccessToken이 없습니다.`);
-          const result = await reissueToken();
-          console.log(
-            `[useUserProfile] AccessToken을 재발급 받았습니다. 결과 : ${result}`
-          );
-        }
-        setLoading(false); // 데이터 fetching 완료 시 로딩 상태 비활성화
-      } catch (err) {
-        setError(err);
-        setLoading(false); // 오류 발생 시 로딩 상태 비활성화
-      }
-    };
-
-    fetchUserProfile();
-    console.log(
-      `[useUserProfile] 유저 정보를 가져오려고 시도했습니다.\n(비동기 처리 전) UserProfile : ${userProfile}`
-    );
-
-    // setInterval을 사용하여 주기적으로 AccessToken 갱신
-    const intervalId = setInterval(
+    const interval = setInterval(
       async () => {
-        console.log(
-          "[useGetUserProfile] Interval 시간이 되어 AccessToken 갱신을 시도합니다."
-        );
-        try {
-          const result = await reissueToken();
-          console.log(`[useUserProfile] AccessToken Reissue 결과 : ${result}`);
-        } catch (err) {
-          console.error("[useGetUserProfile] AccessToken 재발급 실패", err);
+        const success = await reissueToken();
+        console.log("[useGetUserProfile] AT 재발급 결과:", success);
+        if (success) {
+          queryClient.invalidateQueries(["userProfile"]);
+          console.log("[useGetUserProfile] AT 재발급 후 유저 정보 다시 가져옴");
         }
       },
-      1000 * 60 * 25 // 25분마다
-    );
-    console.log(
-      "[useGetUserProfile] Interval을 설정했습니다. 25분마다 AccessToken 갱신을 시도합니다."
+      1000 * 60 * 25 // 25분마다 실행
+      // 1000 * 5 // 15초마다 실행
     );
 
-    // 컴포넌트가 언마운트되면 setInterval을 클리어
     return () => {
-      console.log(
-        "[useGetUserProfile] 컴포넌트가 언마운트되어 AT 갱신 Interval을 클리어합니다."
-      );
-      clearInterval(intervalId);
+      console.log("[useGetUserProfile] AT 재발급 interval 해제");
+      clearInterval(interval);
     };
-  }, []); // 종속성 배열을 비워서 한번만 가져오도록
+  }, [queryClient]);
 
-  return { userProfile, error, loading }; // 로딩 상태 반환
+  return { data, error, isLoading };
 };
 
 export default useGetUserProfile;

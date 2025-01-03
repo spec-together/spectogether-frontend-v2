@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useUser } from "../../contexts/UserContext";
 import { SearchIcon } from "../icons/SearchIcon";
 import { LoggedInUserAndIcons } from "./LoggedInUserAndIcons";
@@ -20,6 +20,10 @@ export const SearchHeader = () => {
     console.log("[PageHeader] 로고를 클릭해서 메인으로 이동합니다.");
     navigate("/");
   };
+
+  useEffect(() => {
+    console.log("사용자 정보가 변동되었습니다", user);
+  }, [user]);
 
   return (
     <div className="flex flex-row items-center w-full h-24 bg-white">
@@ -49,7 +53,11 @@ export const SearchHeader = () => {
       {/* 빈공간 채워주기 */}
       <div className="flex-grow"></div>
       {/* 회원정보 */}
-      {user?.name ? <LoggedInUserAndIcons user={user} /> : <LoginAndRegister />}
+      {user && Object.keys(user).length ? (
+        <LoggedInUserAndIcons />
+      ) : (
+        <LoginAndRegister />
+      )}
     </div>
   );
 };

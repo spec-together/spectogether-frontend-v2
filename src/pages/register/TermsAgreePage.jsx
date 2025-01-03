@@ -7,29 +7,23 @@ export const TermsAgreePage = () => {
   const [agreeAll, setAgreeAll] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState({});
   const location = useLocation();
-  const [prevState, setPrevState] = useState("");
-  const { terms, loading } = useGetTerms();
+  const { data, error, isLoading } = useGetTerms();
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
   useEffect(() => {
-    console.log("[약관동의 페이지] 넘어온 state 값 : ", location.state);
-    if (location.state?.type === "kakao") {
-      setPrevState(location.state?.user || "");
-      console.log("prevState : ", prevState);
-    }
-    if (!loading) {
-      const initialAgreeState = terms.reduce((acc, term) => {
+    if (!isLoading) {
+      const initialAgreeState = data.reduce((acc, term) => {
         acc[term.term_id] = false;
         return acc;
       }, {});
       setAgreeTerms(initialAgreeState);
       setIsButtonDisabled(
-        terms.some(
+        data.some(
           (term) => term.is_required && !initialAgreeState[term.term_id]
         )
       );
     }
-  }, [loading, location.state, terms, prevState]);
+  }, [data, isLoading]);
 
   const handleAgreeAllChange = () => {
     const newAgreeAll = !agreeAll;
@@ -40,7 +34,7 @@ export const TermsAgreePage = () => {
     }, {});
     setAgreeTerms(newAgreeTerms);
     setIsButtonDisabled(
-      terms.some((term) => term.is_required && !newAgreeTerms[term.term_id])
+      data.some((term) => term.is_required && !newAgreeTerms[term.term_id])
     );
   };
 
@@ -53,7 +47,7 @@ export const TermsAgreePage = () => {
       const allAgreed = Object.values(newTerms).every(Boolean);
       setAgreeAll(allAgreed);
       setIsButtonDisabled(
-        terms.some((term) => term.is_required && !newTerms[term.term_id])
+        data.some((term) => term.is_required && !newTerms[term.term_id])
       );
       return newTerms;
     });
@@ -62,8 +56,10 @@ export const TermsAgreePage = () => {
   const navigate = useNavigate();
   const handleContinueRegister = () => {
     console.log("동의한 약관 : ", agreeTerms);
-    console.log("[약관동의페이지] 전달하는 state : ", prevState);
-    navigate("/register", { state: { email: prevState, agreeTerms } });
+    console.log("[약관동의페이지] 전달하는 state : ", location.state);
+    navigate("/register", {
+      state: { ...location.state, agreeTerms },
+    });
   };
 
   return (
@@ -77,7 +73,7 @@ export const TermsAgreePage = () => {
             서비스 이용을 위해서 아래 약관에 동의해주세요.
           </span>
         </div>
-        {loading ? (
+        {isLoading ? (
           <span className="text-2xl">약관을 불러오는 중입니다...</span>
         ) : (
           <>
@@ -91,7 +87,7 @@ export const TermsAgreePage = () => {
             <div className="w-full h-px my-4 bg-black"></div>
 
             <div className="flex flex-col items-center w-full space-y-4">
-              {terms.map((term) => (
+              {data.map((term) => (
                 <div key={term.term_id} className="flex flex-col w-full">
                   <div className="flex flex-row items-center w-full">
                     <CheckBox
@@ -101,6 +97,7 @@ export const TermsAgreePage = () => {
                     <span className="ml-2 text-xl font-semibold">
                       {term.is_required ? "(필수) " : "(선택) "}
                       {term.name}
+                      {"  "}[v{term.term_version}]
                     </span>
                     <div className="flex-grow"></div>
                   </div>

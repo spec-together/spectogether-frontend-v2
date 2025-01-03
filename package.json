@@ -10,14 +10,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.59.19",
+    "@mui/icons-material": "^5.16.13",
+    "@mui/material": "^5.16.13",
+    "@tanstack/react-query": "^5.62.11",
     "axios": "^1.7.7",
     "date-fns": "^4.1.0",
     "es-hangul": "^2.2.3",
+    "framer-motion": "^11.15.0",
     "jwt-decode": "^4.0.0",
+    "lodash": "^4.17.21",
     "react": "^18.3.1",
     "react-datepicker": "^7.5.0",
     "react-dom": "^18.3.1",
+    "react-icons": "^5.4.0",
     "react-router-dom": "^6.27.0",
     "socket.io-client": "^4.8.1"
   },

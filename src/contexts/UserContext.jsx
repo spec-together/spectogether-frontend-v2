@@ -8,41 +8,34 @@ export const useUser = () => useContext(UserContext);
 // TODO : propType 검증 필요
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState({});
-  const { userProfile } = useGetUserProfile();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const { data } = useGetUserProfile();
+
+  const login = (data) => {
+    setUser({
+      user_id: data.user_id,
+      name: data.name,
+      nickname: data.nickname,
+    });
+    console.log(
+      `[UserContext] login 함수에서 유저 정보를 업데이트했습니다.\nUser: ${JSON.stringify(data, null, 2)})`
+    );
+  };
+
+  const logout = () => {
+    setUser(null);
+  };
 
   useEffect(() => {
-    if (userProfile) {
-      setUser(() => userProfile);
+    if (data) {
+      setUser(data);
       console.log(
-        `[UserContext] useUserProfile에서 정보를 가지고 왔습니다.\nUserProfile: ${JSON.stringify(userProfile, null, 2)}) User: ${JSON.stringify(user, null, 2)}`
+        `[UserContext] useUserProfile에서 정보를 가지고 왔습니다.\nUserProfile: ${JSON.stringify(data, null, 2)}) User: ${JSON.stringify(user, null, 2)}`
       );
     }
-    const timer = setTimeout(() => {
-      if (userProfile && location.pathname === "/login") {
-        console.log("[UserContext] 로그인 상태라서 메인페이지로 이동");
-        navigate("/");
-      }
-      // if (
-      //   !userProfile &&
-      //   location.pathname !== "/login" &&
-      //   location.pathname !== "/login/local" &&
-      //   location.pathname !== "/register"
-      // ) {
-      //   // 프로필이 없는데, 로그인페이지가 아니거나, 회원가입 페이지가 아니면
-      //   // 로그인 페이지로 ㄱㄱ
-      //   console.log("[UserContext] 사용자 정보가 없어서 로그인 페이지로 이동");
-      //   navigate("/login");
-      //   return;
-      // }
-    }, 400);
-
-    return () => clearTimeout(timer);
-  }, [userProfile]);
+  }, [data]);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser, login, logout }}>
       {children}
     </UserContext.Provider>
   );
