@@ -2,21 +2,23 @@ import { motion } from "framer-motion";
 import { FaMapMarkerAlt, FaCalendarAlt, FaUsers } from "react-icons/fa";
 
 export const StudyroomInfo = ({ studyroom }) => {
+  if (!studyroom) return null;
+  console.log("[StudyroomInfo] studyroom : ", studyroom);
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="p-6 m-4 bg-gradient-to-br from-indigo-200 to-indigo-700 rounded-xl shadow-2xl overflow-hidden"
+      className="p-6 m-4 overflow-hidden shadow-2xl bg-gradient-to-br from-indigo-200 to-indigo-700 rounded-xl"
     >
-      <div className="flex flex-col lg:flex-row backdrop-blur-md bg-black bg-opacity-10 p-6 rounded-xl">
+      <div className="flex flex-col p-6 bg-black lg:flex-row backdrop-blur-md bg-opacity-10 rounded-xl">
         {/* 스터디룸 프로필 */}
         <motion.div
           whileHover={{ scale: 1.05 }}
           className="mb-6 lg:w-1/3 lg:mb-0 lg:mr-6"
         >
           <img
-            src={studyroom.profile_image}
+            src={studyroom.studyroom.profile_image}
             alt="studyroom-image"
             className="object-cover w-full h-64 rounded-lg shadow-lg"
           />
@@ -27,10 +29,10 @@ export const StudyroomInfo = ({ studyroom }) => {
           {/* 제목 및 부제 */}
           <div className="pb-4 mb-6 border-b border-white border-opacity-20">
             <h1 className="text-3xl font-bold text-white font-gmarket">
-              {studyroom.title}
+              {studyroom.studyroom.title}
             </h1>
             <p className="mt-2 text-lg italic text-gray-300">
-              "{studyroom.subtitle}"
+              "{studyroom.studyroom.subtitle}"
             </p>
           </div>
 
@@ -38,18 +40,18 @@ export const StudyroomInfo = ({ studyroom }) => {
           <div className="grid grid-cols-1 gap-4 mb-6 sm:grid-cols-2">
             <motion.div
               whileHover={{ scale: 1.03 }}
-              className="p-4 rounded-lg bg-white bg-opacity-20 backdrop-blur-sm"
+              className="p-4 bg-white rounded-lg bg-opacity-20 backdrop-blur-sm"
             >
               <p className="text-white">
                 <span className="font-semibold">목표</span>
                 <span className="block mt-1 text-lg text-gray-100">
-                  {studyroom.goal}
+                  {studyroom.studyroom.goal}
                 </span>
               </p>
             </motion.div>
             <motion.div
               whileHover={{ scale: 1.03 }}
-              className="p-4 rounded-lg bg-white bg-opacity-20 backdrop-blur-sm"
+              className="p-4 bg-white rounded-lg bg-opacity-20 backdrop-blur-sm"
             >
               <p className="text-white">
                 <FaMapMarkerAlt className="inline mr-1 text-gray-200" />
@@ -64,20 +66,23 @@ export const StudyroomInfo = ({ studyroom }) => {
           {/* 스터디 시작일 */}
           <motion.div
             whileHover={{ scale: 1.03 }}
-            className="p-4 mb-6 rounded-lg bg-white bg-opacity-20 backdrop-blur-sm"
+            className="p-4 mb-6 bg-white rounded-lg bg-opacity-20 backdrop-blur-sm"
           >
             <p className="text-white">
               <FaCalendarAlt className="inline mr-1 text-gray-200" />
               <span className="font-semibold">스터디 시작</span>
               <span className="block mt-1 text-lg text-gray-100">
-                {new Date(studyroom.created_at).toLocaleString("ko-KR", {
-                  timeZone: "Asia/Seoul",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
+                {new Date(studyroom.studyroom.created_at).toLocaleString(
+                  "ko-KR",
+                  {
+                    timeZone: "Asia/Seoul",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }
+                )}
               </span>
             </p>
           </motion.div>
@@ -89,11 +94,11 @@ export const StudyroomInfo = ({ studyroom }) => {
               스터디 멤버
             </h2>
             <div className="grid gap-2 sm:grid-cols-2">
-              {studyroom.studyroom_members.map((member, index) => (
+              {studyroom.studyroomMembers.map((member, index) => (
                 <motion.div
                   key={index}
                   whileHover={{ scale: 1.05 }}
-                  className="flex items-center justify-between p-2 bg-white bg-opacity-20 backdrop-blur-sm rounded-md"
+                  className="flex items-center justify-between p-2 bg-white rounded-md bg-opacity-20 backdrop-blur-sm"
                 >
                   <span className="text-white">{member.user.nickname}</span>
                   <div>
