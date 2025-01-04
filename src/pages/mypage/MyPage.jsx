@@ -2,9 +2,12 @@ import { useState } from "react";
 import { MyPageEditUserInfo } from "../../components/mypage/MyPageEditUserInfo.jsx";
 import { MyStudyroomListPage } from "./MyStudyroomListPage.jsx";
 import { MyTodoList } from "../../components/mypage/MyTodoList.jsx";
+import { MyPageSpecList } from "./MyPageSpecList.jsx";
+import { useNavigate } from "react-router-dom";
 
 export const MyPage = () => {
   const [activeTab, setActiveTab] = useState("회원정보수정");
+  const navigate = useNavigate();
 
   const renderContent = () => {
     switch (activeTab) {
@@ -17,7 +20,9 @@ export const MyPage = () => {
       case "스터디 관리":
         return <MyStudyroomListPage />;
       case "스펙 관리":
-        return "스펙 관리";
+        // "스펙 관리" 탭 클릭 시 /specs 경로로 이동
+        navigate("/specs");
+        return null;
       case "내 문의사항":
         return "내 문의사항";
       default:

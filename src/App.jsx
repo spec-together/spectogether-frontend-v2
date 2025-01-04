@@ -17,6 +17,8 @@ import { StudyroomVideocallPage } from "./pages/studyroom/StudyroomVideocallPage
 import { MyStudyroomListPage } from "./pages/mypage/MyStudyroomListPage.jsx";
 import { ResetPasswordPage } from "./pages/findpw/ResetPasswordPage.jsx";
 import { NoticePage } from "./pages/main/NoticePage.jsx";
+import { MyPageSpecList } from "./pages/mypage/MyPageSpecList.jsx";
+import { MyPageSpecDetails } from "./components/mypage/MyPageSpecDetails.jsx";
 
 // QueryClient 생성
 const queryClient = new QueryClient();
@@ -29,7 +31,6 @@ function App() {
           <Routes>
             {/* 404 */}
             <Route path="*" element={<NotFoundPage />} />
-
             {/* 로그인, 비밀번호 찾기, 회원가입 페이지 */}
             <Route
               path="/login"
@@ -63,7 +64,6 @@ function App() {
                 </SearchHeaderLayoutPage>
               }
             />
-
             {/* 공모전 페이지 */}
             <Route
               path="/contest/:contestId"
@@ -73,7 +73,6 @@ function App() {
                 </SearchHeaderLayoutPage>
               }
             />
-
             {/* 메인페이지 */}
             <Route
               path="/"
@@ -83,7 +82,6 @@ function App() {
                 </SearchHeaderLayoutPage>
               }
             />
-
             {/* 공지사항 */}
             <Route
               path="/notice"
@@ -93,7 +91,6 @@ function App() {
                 </SearchHeaderLayoutPage>
               }
             />
-
             {/* 스터디룸 */}
             <Route
               path="/studyroom"
@@ -119,7 +116,6 @@ function App() {
                 </PageHeaderLayoutPage>
               }
             />
-
             {/* 마이페이지 */}
             <Route
               path="/mypage"
@@ -129,13 +125,28 @@ function App() {
                 </PageHeaderLayoutPage>
               }
             />
+            <Route
+              path="/specs"
+              element={
+                <PageHeaderLayoutPage>
+                  <MyPageSpecList />
+                </PageHeaderLayoutPage>
+              }
+            />
 
+            <Route
+              path="/spec/:spec_id"
+              element={
+                <PageHeaderLayoutPage>
+                  <MyPageSpecDetails />
+                </PageHeaderLayoutPage>
+              }
+            />
             {/* 기능 테스트용 페이지들 */}
             <Route
               path="/test-videocall"
               element={<StudyroomVideocallPage />}
             />
-
             <Route path="/test" element={<FeatureTestPage />} />
           </Routes>
         </UserProvider>
