@@ -2,6 +2,7 @@ import { useState } from "react";
 import { MyPageEditUserInfo } from "../../components/mypage/MyPageEditUserInfo.jsx";
 import { MyStudyroomListPage } from "./MyStudyroomListPage.jsx";
 import { MyTodoList } from "../../components/mypage/MyTodoList.jsx";
+import { MyPageSpec } from "../../components/mypage/MyPageSpec.jsx";
 
 export const MyPage = () => {
   const [activeTab, setActiveTab] = useState("회원정보수정");
@@ -17,7 +18,7 @@ export const MyPage = () => {
       case "스터디 관리":
         return <MyStudyroomListPage />;
       case "스펙 관리":
-        return "스펙 관리";
+        return <MyPageSpec />;
       case "내 문의사항":
         return "내 문의사항";
       default:
