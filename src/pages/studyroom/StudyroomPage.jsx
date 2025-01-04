@@ -21,7 +21,7 @@ export const StudyroomPage = () => {
       <div className="flex flex-col w-3/5 h-full overflow-y-auto">
         <StudyroomInfo studyroom={data} />
         {/* 하단 캘린더 */}
-        <CalendarForStudyroom todos={data.studyroom_todos} />
+        <CalendarForStudyroom todos={data.studyroomTodos} />
       </div>
       <div className="w-px mx-8 bg-[#7b7b7b]"></div>
       <ChatroomForStudyroom />
